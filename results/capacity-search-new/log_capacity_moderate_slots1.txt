@@ -1,0 +1,52 @@
+
+edge-llm-server — Isolated Capacity Search (capacity_moderate_slots1)
+  Client type    : moderate  (TTFT mean < 2.0s)
+  Host:port      : localhost:8081  (direct to server)
+  Search mode    : adaptive
+  Start / Max n  : 1 / 64
+  Repeats/level  : 3  (+ 1 warm-up trial(s) discarded per level)
+  Slots (info)   : 1
+  Started        : 2026-10-30T00:30:08
+
+  Checking health …
+  Reachable — status: 'ok'
+
+  Concurrency 1 (moderate) — 3 repeated trials  [adaptive]
+    warm-up 1/1 (discarded) …
+    trial 1/3: n_ok=  1/  1  mean=  0.051s  [ok]
+    trial 2/3: n_ok=  1/  1  mean=  0.060s  [ok]
+    trial 3/3: n_ok=  1/  1  mean=  0.049s  [ok]
+    -> pooled: n_ok=3/3  completion=1.0  mean=0.053s  [PASS]
+
+  Concurrency 2 (moderate) — 3 repeated trials  [adaptive]
+    warm-up 1/1 (discarded) …
+    trial 1/3: n_ok=  2/  2  mean=  1.821s  [ok]
+    trial 2/3: n_ok=  2/  2  mean=  1.852s  [ok]
+    trial 3/3: n_ok=  2/  2  mean=  1.822s  [ok]
+    -> pooled: n_ok=6/6  completion=1.0  mean=1.832s  [PASS]
+
+  Concurrency 4 (moderate) — 3 repeated trials  [adaptive]
+    warm-up 1/1 (discarded) …
+    trial 1/3: n_ok=  4/  4  mean=  5.444s  [FAIL]
+    trial 2/3: n_ok=  4/  4  mean=  5.338s  [FAIL]
+    trial 3/3: n_ok=  4/  4  mean=  5.413s  [FAIL]
+    -> pooled: n_ok=12/12  completion=1.0  mean=5.398s  [FAIL]
+
+  Concurrency 3 (moderate) — 3 repeated trials  [adaptive]
+    warm-up 1/1 (discarded) …
+    trial 1/3: n_ok=  3/  3  mean=  3.636s  [FAIL]
+    trial 2/3: n_ok=  3/  3  mean=  3.584s  [FAIL]
+    trial 3/3: n_ok=  3/  3  mean=  3.641s  [FAIL]
+    -> pooled: n_ok=9/9  completion=1.0  mean=3.620s  [FAIL]
+
+==========================================================================
+  CAPACITY SEARCH SUMMARY — capacity_moderate_slots1
+==========================================================================
+  Max concurrency within SLO: 2
+    concurrency=   1  mean=  0.053s  completion=1.0  [PASS]
+    concurrency=   2  mean=  1.832s  completion=1.0  [PASS]
+    concurrency=   3  mean=  3.620s  completion=1.0  [FAIL]
+    concurrency=   4  mean=  5.398s  completion=1.0  [FAIL]
+
+  Results saved → results/capacity-search-new/results_capacity_moderate_slots1.json
+

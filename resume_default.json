@@ -1,0 +1,55 @@
+{
+ "label": "default",
+ "args": {
+  "host": "localhost",
+  "port": 8081,
+  "label": "default",
+  "prompt_tokens": 350,
+  "gen": 300,
+  "abort_after": 150,
+  "reps": 3,
+  "parts": "3"
+ },
+ "prefill": {},
+ "resume_ttft_s": {
+  "immediate": [],
+  "after_other_requests": [],
+  "cold_reference": []
+ },
+ "resume_prompt_n_cache_n": {
+  "immediate": [],
+  "after_other_requests": [],
+  "cold_reference": []
+ },
+ "chat_ttft_s": {
+  "alone": [
+   0.2292406079999978,
+   0.2432014039999899,
+   0.18741177599997627,
+   0.22600762299998678,
+   0.22893450500004064,
+   0.23198124200001757
+  ],
+  "other_slot_decoding": [
+   0.24750023100000362,
+   0.27557942200002117,
+   0.22613502199999402,
+   0.19542447999998558,
+   0.24752788199998577,
+   0.2708353680000073
+  ],
+  "other_slot_prefilling_400tok": [
+   3.991551243999993,
+   4.128532872999983,
+   3.657355929000005,
+   3.6863235079999868,
+   3.36259595599995,
+   3.160625958999958
+  ]
+ },
+ "summary": {
+  "immediate_s": NaN,
+  "after_other_s": NaN,
+  "cold_s": NaN
+ }
+}

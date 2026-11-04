@@ -61,6 +61,7 @@ import argparse
 import json
 import logging
 import queue
+import socket
 import threading
 import time
 import uuid
@@ -155,8 +156,62 @@ def _parse_args():
             "are given."
         ),
     )
+    parser.add_argument(
+        "--chat-hold-seconds", default=0.0, type=float, metavar="T",
+        help=(
+            "S3b: only with --smart-preemption. Keep the 1-slot Chat "
+            "reservation for T seconds after the LAST Chat activity (a Chat "
+            "arrival, dispatch or completion), instead of releasing it the "
+            "instant Chat is neither queued nor in flight. T=0 reproduces "
+            "plain --smart-preemption exactly; very large T approaches the "
+            "static --reserved-chat-slots 1 behaviour. Like smart-preemption "
+            "this never interrupts a running request. (default: 0)"
+        ),
+    )
+    parser.add_argument(
+        "--preempt-batch", action="store_true",
+        help=(
+            "S5: real preemption by abort-and-requeue. When a Chat request "
+            "is waiting and no slot is free, abort the running Batch request "
+            "that has done the LEAST work (close its connection to "
+            "llama-server, which frees the slot) and put it back in the "
+            "queue to restart from scratch. Batch responses are buffered by "
+            "the proxy until complete so the client never sees a partial "
+            "stream twice. Only streaming (stream=true) Batch requests are "
+            "ever aborted. Use with --reserved-chat-slots 0."
+        ),
+    )
+    parser.add_argument(
+        "--preempt-for-moderate", action="store_true",
+        help="With --preempt-batch: Moderate requests may also abort Batch.",
+    )
+    parser.add_argument(
+        "--max-preemptions", default=2, type=int, metavar="N",
+        help=(
+            "With --preempt-batch: a Batch request is aborted at most N "
+            "times, then it is no longer a victim (bounds wasted work and "
+            "livelock). (default: 2)"
+        ),
+    )
+    parser.add_argument(
+        "--pin-slots", action="store_true",
+        help=(
+            "Assign each request an explicit llama-server slot (id_slot): Chat gets "
+            "the LOWEST free slot id, Moderate/Batch the HIGHEST. Measured: llama-server "
+            "fills each iteration's prompt tokens in slot-index order, so a Chat request "
+            "sitting in a higher-numbered slot than a request that is prefilling waits for "
+            "the whole prefill (about 3.6-4.3 s for 400 tokens), while Chat in the lower "
+            "slot waits about 0.6 s (with -b 32 -ub 32)."
+        ),
+    )
     args = parser.parse_args()
 
+    if args.max_preemptions < 0:
+        parser.error("--max-preemptions must be >= 0")
+    if args.chat_hold_seconds < 0:
+        parser.error("--chat-hold-seconds must be >= 0")
+    if args.chat_hold_seconds > 0 and not args.smart_preemption:
+        parser.error("--chat-hold-seconds requires --smart-preemption")
     if args.reserved_chat_slots < 0:
         parser.error("--reserved-chat-slots must be >= 0")
     if args.reserved_chat_slots > args.slots:
@@ -204,8 +259,35 @@ _slot_sem: threading.Semaphore  # initialised in main()
 _active_by_priority = {0: 0, 1: 0, 2: 0}
 _active_lock = threading.Lock()
 
+# perf_counter() time of the most recent Chat activity (arrival, dispatch or
+# completion); None until the first Chat request is seen. Only read when
+# --chat-hold-seconds > 0.
+_last_chat_activity: Optional[float] = None
+
+
+def _touch_chat():
+    """Record 'Chat was active just now' (used by --chat-hold-seconds)."""
+    global _last_chat_activity
+    _last_chat_activity = time.perf_counter()
+
+
+# S5 (--preempt-batch) state
+_free_slot_ids: set = set()      # slot ids not currently assigned (under _active_lock); --pin-slots
+_running: set = set()            # Batch requests currently holding a slot (under _active_lock)
+_dispatcher_claim = False        # dispatcher holds an acquired slot it has not yet counted
+_preempt_stats = {"preemptions": 0, "wasted_s": 0.0, "completed_after_preempt": 0,
+                  "max_preempts_one_request": 0}
+_preempt_lock = threading.Lock()
+
 _results: list[dict] = []
 _results_lock = threading.Lock()
+
+
+def _release_slot_id(req):
+    """Give the request's slot id back (call under _active_lock)."""
+    if req.slot_id is not None:
+        _free_slot_ids.add(req.slot_id)
+        req.slot_id = None
 
 
 def _next_seq() -> int:
@@ -244,6 +326,15 @@ class PendingRequest:
         self.t_dispatch = None
         self.t_first_token = None
         self.t_complete = None
+        # S5 (--preempt-batch)
+        self.slot_id = None
+        self.seq = None
+        self.is_stream = False
+        self.upstream = None
+        self.preempt_requested = False
+        self.preempt_count = 0
+        self.t_start = None
+        self.wasted_s = 0.0
 
 
 # ── Slot dispatcher ───────────────────────────────────────────────────────────
@@ -272,7 +363,15 @@ def _chat_present() -> bool:
         if _active_by_priority[0] > 0:
             return True
     with _pq.mutex:
-        return any(item[0] == 0 for item in _pq.queue)
+        if any(item[0] == 0 for item in _pq.queue):
+            return True
+    # S3b hold timer: Chat was active within the last T seconds.
+    hold = _cfg.chat_hold_seconds
+    if hold > 0:
+        last = _last_chat_activity
+        if last is not None and (time.perf_counter() - last) <= hold:
+            return True
+    return False
 
 
 def _reservation_blocks(priority: int) -> bool:
@@ -343,6 +442,8 @@ def _dispatcher():
         _pq.put((priority, seq, req))
 
         _slot_sem.acquire()
+        global _dispatcher_claim
+        _dispatcher_claim = True
         time.sleep(_cfg.arrival_window)   # now all burst clients can arrive
 
         # Pop the highest-priority request
@@ -352,6 +453,7 @@ def _dispatcher():
             waited = time.perf_counter() - req.t_queue_enter
             log.info(f"[{req.client_id:8s}] dropped (abandoned, "
                      f"waited={waited:.1f}s)")
+            _dispatcher_claim = False
             _slot_sem.release()
             continue
 
@@ -362,13 +464,24 @@ def _dispatcher():
         # slot we're not using and retry rather than forwarding it.
         if _reservation_blocks(req.priority):
             _pq.put((priority, seq, req))
+            _dispatcher_claim = False
             _slot_sem.release()
             continue
 
         req.timing["queue_wait"] = time.perf_counter() - req.t_arrived
 
+        req.t_start = time.perf_counter()
         with _active_lock:
+            if _cfg.pin_slots and _free_slot_ids:
+                req.slot_id = (min(_free_slot_ids) if req.priority == 0
+                               else max(_free_slot_ids))
+                _free_slot_ids.discard(req.slot_id)
             _active_by_priority[req.priority] += 1
+            if req.priority == 2:
+                _running.add(req)
+            _dispatcher_claim = False
+        if req.priority == 0:
+            _touch_chat()
 
         t = threading.Thread(target=_forward, args=(req,), daemon=True)
         t.start()
@@ -383,12 +496,21 @@ def _forward(req: PendingRequest):
     record split timings, then release the semaphore.
     """
     url = f"http://{_cfg.server_host}:{_cfg.server_port}{req.path}"
-    http_req = Request(url, data=req.body, method=req.method)
+    body = req.body
+    if _cfg.pin_slots and req.slot_id is not None and body:
+        try:
+            j = json.loads(body)
+            if isinstance(j, dict):
+                j["id_slot"] = req.slot_id
+                body = json.dumps(j).encode()
+        except Exception:
+            pass
+    http_req = Request(url, data=body, method=req.method)
     for k, v in req.headers.items():
         if k.lower() in ("host", "content-length", "transfer-encoding"):
             continue
         http_req.add_header(k, v)
-    http_req.add_header("Content-Length", str(len(req.body)))
+    http_req.add_header("Content-Length", str(len(body)))
 
     t_forward = time.perf_counter()
     req.timing["t_forward"] = t_forward
@@ -402,9 +524,17 @@ def _forward(req: PendingRequest):
         req.timing["prompt_eval"]      = 0.0
         req.timing["token_generation"] = 0.0
         req.ready_event.set()
+        if req.priority == 0:
+            _touch_chat()
         with _active_lock:
             _active_by_priority[req.priority] -= 1
+            _running.discard(req)
+            _release_slot_id(req)
         _slot_sem.release()
+        return
+
+    if _cfg.preempt_batch and req.priority == 2 and req.is_stream:
+        _forward_buffered(req, resp, t_forward)
         return
 
     req.response_status  = resp.status
@@ -445,8 +575,11 @@ def _forward(req: PendingRequest):
             )
             req.timing["total_service_time"] = t_done - t_forward
 
+            if req.priority == 0:
+                _touch_chat()
             with _active_lock:
                 _active_by_priority[req.priority] -= 1
+                _release_slot_id(req)
             _slot_sem.release()
 
             record = {
@@ -482,6 +615,140 @@ def _forward(req: PendingRequest):
 
     req.response_body_iter = _stream()
     req.ready_event.set()
+
+
+def _abort_upstream(req: PendingRequest):
+    """Kill the proxy->llama-server connection of a running request. The
+    server notices the disconnect and frees the slot; our reader thread sees
+    EOF/an error and handles the requeue in _forward_buffered."""
+    resp = req.upstream
+    if resp is None:
+        return
+    try:
+        resp.fp.raw._sock.shutdown(socket.SHUT_RDWR)
+    except Exception:
+        pass
+    try:
+        resp.close()
+    except Exception:
+        pass
+
+
+def _forward_buffered(req: PendingRequest, resp, t_forward: float):
+    """Batch path under --preempt-batch: read the whole upstream stream into
+    memory, then hand it to the client in one go. If we are asked to abort
+    while it is still running (and it has not finished), discard the partial
+    output, requeue the request at its original queue position, free the slot."""
+    req.upstream = resp
+    lines, saw_done, t_first = [], False, None
+    try:
+        for raw in resp:
+            lines.append(raw)
+            if t_first is None:
+                line = raw.decode("utf-8", errors="replace").strip()
+                if line.startswith("data:"):
+                    d = line[5:].strip()
+                    if d and d != "[DONE]":
+                        try:
+                            delta = (json.loads(d).get("choices", [{}])[0]
+                                     .get("delta", {}).get("content", ""))
+                            if delta:
+                                t_first = time.perf_counter()
+                        except (json.JSONDecodeError, IndexError):
+                            pass
+            if raw.strip() == b"data: [DONE]":
+                saw_done = True
+    except Exception:
+        pass
+    finally:
+        try:
+            resp.close()
+        except Exception:
+            pass
+    t_done = time.perf_counter()
+    req.upstream = None
+
+    with _active_lock:
+        _active_by_priority[2] -= 1
+        _running.discard(req)
+        _release_slot_id(req)
+
+    if req.preempt_requested and not saw_done:
+        elapsed = t_done - t_forward
+        req.wasted_s += elapsed
+        req.preempt_count += 1
+        with _preempt_lock:
+            _preempt_stats["preemptions"] += 1
+            _preempt_stats["wasted_s"] += elapsed
+            _preempt_stats["max_preempts_one_request"] = max(
+                _preempt_stats["max_preempts_one_request"], req.preempt_count)
+        log.info(f"[{req.client_id:8s}] PREEMPTED after {elapsed:.1f}s "
+                 f"(#{req.preempt_count}) -> requeued")
+        req.preempt_requested = False
+        req.timing = {}
+        req.t_first_token = None
+        _pq.put((req.priority, req.seq, req))   # requeue BEFORE freeing the slot
+        _slot_sem.release()
+        return
+
+    req.t_first_token = t_first
+    req.t_complete = t_done
+    req.timing["prompt_eval"] = (t_first - t_forward) if t_first else 0.0
+    req.timing["token_generation"] = (t_done - t_first) if t_first else 0.0
+    req.timing["total_service_time"] = t_done - t_forward
+    if req.preempt_count:
+        with _preempt_lock:
+            _preempt_stats["completed_after_preempt"] += 1
+    record = {
+        "dispatch_to_first_token": 0,
+        "req_id": req.req_id, "client_id": req.client_id, "priority": req.priority,
+        "queue_wait": round(req.timing.get("queue_wait", 0), 4),
+        "ttft_at_proxy": round(req.timing["prompt_eval"], 4),
+        "token_generation": round(req.timing["token_generation"], 4),
+        "total_service": round(req.timing["total_service_time"], 4),
+        "total_e2e": round(req.timing.get("queue_wait", 0) + req.timing["total_service_time"], 4),
+        "preemptions": req.preempt_count,
+        "wasted_s": round(req.wasted_s, 4),
+    }
+    with _results_lock:
+        _results.append(record)
+    log.info(f"[{req.client_id:8s}] qw={record['queue_wait']:.3f}s "
+             f"svc={record['total_service']:.3f}s e2e={record['total_e2e']:.3f}s "
+             f"preempts={req.preempt_count}")
+    req.response_status = resp.status
+    req.response_headers = list(resp.headers.items())
+    req.response_body_iter = iter(lines)
+    req.ready_event.set()
+    _slot_sem.release()
+
+
+def _preemptor():
+    """S5: when requests that are allowed to preempt (Chat, optionally
+    Moderate) are waiting and no slot is, or is about to be, free, abort the
+    youngest running streaming Batch request(s)."""
+    thr = 1 if _cfg.preempt_for_moderate else 0
+    while True:
+        time.sleep(0.02)
+        with _pq.mutex:
+            n_wait = sum(1 for it in _pq.queue
+                         if it[0] <= thr and not it[2].abandoned)
+        if not n_wait:
+            continue
+        with _active_lock:
+            total_active = sum(_active_by_priority.values())
+            free = _cfg.slots - total_active - (1 if _dispatcher_claim else 0)
+            pending = sum(1 for r in _running if r.preempt_requested)
+            victims = [r for r in _running
+                       if r.is_stream and r.upstream is not None
+                       and not r.preempt_requested
+                       and r.preempt_count < _cfg.max_preemptions]
+        need = n_wait - max(free, 0) - pending
+        if need <= 0 or not victims:
+            continue
+        victims.sort(key=lambda r: r.t_start or 0, reverse=True)   # least work done first
+        for v in victims[:need]:
+            v.preempt_requested = True
+            _abort_upstream(v)
 
 
 # ── HTTP handler ──────────────────────────────────────────────────────────────
@@ -546,7 +813,14 @@ class ProxyHandler(BaseHTTPRequestHandler):
             req_id    = req_id,
         )
 
+        if priority == 0:
+            _touch_chat()
         seq = _next_seq()
+        req.seq = seq
+        try:
+            req.is_stream = bool(json.loads(body or b"{}").get("stream"))
+        except Exception:
+            req.is_stream = False
         log.info(f"[{client_id:8s}] arrived  priority={priority}  seq={seq}")
         req.t_queue_enter = time.perf_counter()
         _pq.put((priority, seq, req))
@@ -589,6 +863,18 @@ class ProxyHandlerWithResults(ProxyHandler):
             self.end_headers()
             self.wfile.write(body)
             return
+        if self.path == "/proxy/stats":
+            with _preempt_lock:
+                body = json.dumps(dict(_preempt_stats,
+                                       preempt_batch=_cfg.preempt_batch,
+                                       max_preemptions=_cfg.max_preemptions),
+                                  indent=2).encode()
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+            return
         super().do_GET()
 
 
@@ -598,9 +884,12 @@ def main():
     global _cfg, _slot_sem
     _cfg = _parse_args()
     _slot_sem = threading.Semaphore(_cfg.slots)
+    _free_slot_ids.update(range(_cfg.slots))
 
     dt = threading.Thread(target=_dispatcher, daemon=True, name="dispatcher")
     dt.start()
+    if _cfg.preempt_batch:
+        threading.Thread(target=_preemptor, daemon=True, name="preemptor").start()
 
     server = ThreadingHTTPServer(
         (_cfg.proxy_host, _cfg.proxy_port), ProxyHandlerWithResults
@@ -615,6 +904,8 @@ def main():
             "Reservation    : SMART-PREEMPTION (adaptive) -- holds at most "
             "1 slot for Chat, only while Chat is queued or in-flight right "
             "now; releases automatically when Chat goes idle"
+            + (f" (+ S3b hold: keeps it {_cfg.chat_hold_seconds:g}s after the "
+               f"last Chat activity)" if _cfg.chat_hold_seconds > 0 else "")
         )
         if _cfg.reserved_chat_slots != 1:
             log.info(
@@ -630,6 +921,15 @@ def main():
         )
     else:
         log.info("Reserved slots : 0 (reservation disabled)")
+    if _cfg.pin_slots:
+        log.info("Slot pinning   : ON (Chat -> lowest free slot id, Moderate/Batch -> highest)")
+    if _cfg.preempt_batch:
+        log.info(
+            f"Preemption     : ABORT-AND-REQUEUE Batch for "
+            f"{'Chat+Moderate' if _cfg.preempt_for_moderate else 'Chat'}; "
+            f"max {_cfg.max_preemptions} per request; Batch responses buffered "
+            f"(stats at /proxy/stats)"
+        )
     log.info("Columns: queue_wait | ttft_at_proxy | token_gen | e2e")
     log.info("─" * 60)
 

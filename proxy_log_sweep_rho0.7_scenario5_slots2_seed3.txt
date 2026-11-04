@@ -1,0 +1,529 @@
+03:23:38 [proxy] Priority proxy listening on localhost:8082
+03:23:38 [proxy] Forwarding to llama-server at localhost:8081
+03:23:38 [proxy] Slot capacity  : 2
+03:23:38 [proxy] Arrival window : 5.0 ms
+03:23:38 [proxy] Dispatch gap   : 5.0 ms  (set 0 to disable)
+03:23:38 [proxy] Reserved slots : 0 (reservation disabled)
+03:23:38 [proxy] Preemption     : ABORT-AND-REQUEUE Batch for Chat; max 2 per request; Batch responses buffered (stats at /proxy/stats)
+03:23:38 [proxy] Columns: queue_wait | ttft_at_proxy | token_gen | e2e
+03:23:38 [proxy] ────────────────────────────────────────────────────────────
+03:23:48 [proxy] [chat    ] arrived  priority=0  seq=1
+03:23:49 [proxy] [chat    ] qw=0.005s bw=0.000s ttft=0.404s tg=0.227s e2e=0.636s
+03:23:51 [proxy] [batch   ] arrived  priority=2  seq=2
+03:23:51 [proxy] [chat    ] arrived  priority=0  seq=3
+03:23:53 [proxy] [chat    ] qw=0.005s bw=0.000s ttft=1.098s tg=0.293s e2e=1.396s
+03:23:55 [proxy] [chat    ] arrived  priority=0  seq=4
+03:23:55 [proxy] [chat    ] qw=0.005s bw=0.000s ttft=0.061s tg=0.279s e2e=0.346s
+03:23:59 [proxy] [moderate] arrived  priority=1  seq=5
+03:24:00 [proxy] [moderate] arrived  priority=1  seq=6
+03:24:04 [proxy] [moderate] qw=0.006s bw=0.000s ttft=0.382s tg=4.287s e2e=4.675s
+03:24:05 [proxy] [chat    ] arrived  priority=0  seq=7
+03:24:05 [proxy] [batch   ] PREEMPTED after 14.0s (#1) -> requeued
+03:24:06 [proxy] [chat    ] qw=0.012s bw=0.000s ttft=0.259s tg=0.295s e2e=0.565s
+03:24:06 [proxy] [moderate] arrived  priority=1  seq=8
+03:24:06 [proxy] [chat    ] arrived  priority=0  seq=9
+03:24:07 [proxy] [batch   ] PREEMPTED after 1.2s (#2) -> requeued
+03:24:07 [proxy] [chat    ] qw=0.530s bw=0.000s ttft=0.276s tg=0.298s e2e=1.104s
+03:24:08 [proxy] [moderate] arrived  priority=1  seq=10
+03:24:09 [proxy] [moderate] qw=4.115s bw=0.000s ttft=0.080s tg=5.357s e2e=9.553s
+03:24:11 [proxy] [chat    ] arrived  priority=0  seq=11
+03:24:12 [proxy] [chat    ] arrived  priority=0  seq=12
+03:24:12 [proxy] [chat    ] arrived  priority=0  seq=13
+03:24:12 [proxy] [moderate] qw=1.126s bw=0.000s ttft=0.456s tg=4.533s e2e=6.115s
+03:24:13 [proxy] [chat    ] qw=0.952s bw=0.000s ttft=0.223s tg=0.305s e2e=1.480s
+03:24:13 [proxy] [chat    ] arrived  priority=0  seq=14
+03:24:13 [proxy] [chat    ] qw=0.914s bw=0.000s ttft=0.073s tg=0.296s e2e=1.283s
+03:24:14 [proxy] [chat    ] qw=0.922s bw=0.000s ttft=0.076s tg=0.316s e2e=1.314s
+03:24:14 [proxy] [batch   ] arrived  priority=2  seq=15
+03:24:14 [proxy] [chat    ] qw=0.406s bw=0.000s ttft=0.073s tg=0.356s e2e=0.834s
+03:24:14 [proxy] [moderate] arrived  priority=1  seq=16
+03:24:15 [proxy] [batch   ] arrived  priority=2  seq=17
+03:24:19 [proxy] [moderate] qw=1.369s bw=0.000s ttft=0.072s tg=6.351s e2e=7.791s
+03:24:20 [proxy] [batch   ] arrived  priority=2  seq=18
+03:24:22 [proxy] [chat    ] arrived  priority=0  seq=19
+03:24:23 [proxy] [moderate] qw=1.626s bw=0.000s ttft=0.083s tg=4.342s e2e=6.052s
+03:24:23 [proxy] [chat    ] arrived  priority=0  seq=20
+03:24:24 [proxy] [chat    ] qw=0.830s bw=0.000s ttft=0.245s tg=0.303s e2e=1.378s
+03:24:24 [proxy] [chat    ] qw=0.243s bw=0.000s ttft=0.078s tg=0.323s e2e=0.643s
+03:24:24 [proxy] [chat    ] arrived  priority=0  seq=21
+03:24:25 [proxy] [moderate] arrived  priority=1  seq=22
+03:24:25 [proxy] [batch   ] PREEMPTED after 1.3s (#1) -> requeued
+03:24:26 [proxy] [chat    ] qw=1.122s bw=0.000s ttft=0.224s tg=0.307s e2e=1.654s
+03:24:28 [proxy] [chat    ] arrived  priority=0  seq=23
+03:24:29 [proxy] [chat    ] arrived  priority=0  seq=24
+03:24:31 [proxy] [moderate] qw=1.090s bw=0.000s ttft=0.469s tg=5.119s e2e=6.677s
+03:24:32 [proxy] [chat    ] qw=3.515s bw=0.000s ttft=0.219s tg=0.320s e2e=4.054s
+03:24:32 [proxy] [chat    ] qw=2.760s bw=0.000s ttft=0.079s tg=0.321s e2e=3.160s
+03:24:42 [proxy] [chat    ] arrived  priority=0  seq=25
+03:24:42 [proxy] [batch   ] PREEMPTED after 9.7s (#2) -> requeued
+03:24:43 [proxy] [chat    ] qw=0.011s bw=0.000s ttft=0.323s tg=0.322s e2e=0.655s
+03:24:46 [proxy] [chat    ] arrived  priority=0  seq=26
+03:24:46 [proxy] [batch   ] qw=23.100s svc=28.921s e2e=52.020s preempts=2
+03:24:47 [proxy] [chat    ] qw=0.334s bw=0.000s ttft=0.275s tg=0.318s e2e=0.927s
+03:24:57 [proxy] [chat    ] arrived  priority=0  seq=27
+03:24:57 [proxy] [batch   ] PREEMPTED after 7.4s (#1) -> requeued
+03:24:58 [proxy] [chat    ] arrived  priority=0  seq=28
+03:24:58 [proxy] [chat    ] qw=0.014s bw=0.000s ttft=0.315s tg=0.327s e2e=0.656s
+03:24:58 [proxy] [chat    ] qw=0.015s bw=0.000s ttft=0.084s tg=0.327s e2e=0.426s
+03:24:59 [proxy] [moderate] arrived  priority=1  seq=29
+03:24:59 [proxy] [chat    ] arrived  priority=0  seq=30
+03:24:59 [proxy] [batch   ] PREEMPTED after 1.3s (#2) -> requeued
+03:24:59 [proxy] [moderate] arrived  priority=1  seq=31
+03:25:00 [proxy] [chat    ] qw=0.713s bw=0.000s ttft=0.311s tg=0.346s e2e=1.370s
+03:25:01 [proxy] [batch   ] arrived  priority=2  seq=32
+03:25:02 [proxy] [chat    ] arrived  priority=0  seq=33
+03:25:03 [proxy] [chat    ] arrived  priority=0  seq=34
+03:25:04 [proxy] [chat    ] arrived  priority=0  seq=35
+03:25:05 [proxy] [moderate] qw=1.405s bw=0.000s ttft=0.531s tg=4.687s e2e=6.622s
+03:25:06 [proxy] [chat    ] arrived  priority=0  seq=36
+03:25:06 [proxy] [chat    ] qw=3.459s bw=0.000s ttft=0.270s tg=0.317s e2e=4.045s
+03:25:06 [proxy] [chat    ] qw=2.763s bw=0.000s ttft=0.079s tg=0.329s e2e=3.171s
+03:25:07 [proxy] [chat    ] qw=2.449s bw=0.000s ttft=0.079s tg=0.334s e2e=2.862s
+03:25:07 [proxy] [chat    ] qw=1.077s bw=0.000s ttft=0.079s tg=0.350s e2e=1.506s
+03:25:10 [proxy] [chat    ] arrived  priority=0  seq=37
+03:25:10 [proxy] [chat    ] arrived  priority=0  seq=38
+03:25:12 [proxy] [moderate] qw=7.620s bw=0.000s ttft=0.506s tg=4.714s e2e=12.841s
+03:25:13 [proxy] [chat    ] qw=2.650s bw=0.000s ttft=0.253s tg=0.352s e2e=3.255s
+03:25:13 [proxy] [chat    ] qw=3.206s bw=0.000s ttft=0.089s tg=0.355s e2e=3.650s
+03:25:17 [proxy] [batch   ] qw=25.998s svc=31.117s e2e=57.115s preempts=2
+03:25:18 [proxy] [chat    ] arrived  priority=0  seq=39
+03:25:18 [proxy] [batch   ] PREEMPTED after 0.7s (#1) -> requeued
+03:25:18 [proxy] [chat    ] qw=0.011s bw=0.000s ttft=0.269s tg=0.330s e2e=0.610s
+03:25:20 [proxy] [moderate] arrived  priority=1  seq=40
+03:25:20 [proxy] [chat    ] arrived  priority=0  seq=41
+03:25:21 [proxy] [batch   ] PREEMPTED after 2.4s (#2) -> requeued
+03:25:21 [proxy] [chat    ] qw=0.022s bw=0.000s ttft=0.240s tg=0.318s e2e=0.580s
+03:25:23 [proxy] [chat    ] arrived  priority=0  seq=42
+03:25:26 [proxy] [moderate] qw=1.509s bw=0.000s ttft=0.509s tg=4.155s e2e=6.173s
+03:25:29 [proxy] [chat    ] qw=2.506s bw=0.000s ttft=0.256s tg=0.317s e2e=3.079s
+03:25:40 [proxy] [chat    ] arrived  priority=0  seq=43
+03:25:40 [proxy] [chat    ] arrived  priority=0  seq=44
+03:25:42 [proxy] [moderate] arrived  priority=1  seq=45
+03:25:46 [proxy] [batch   ] qw=52.868s svc=29.297s e2e=82.165s preempts=2
+03:25:46 [proxy] [chat    ] arrived  priority=0  seq=46
+03:25:46 [proxy] [chat    ] qw=5.182s bw=0.000s ttft=0.278s tg=0.321s e2e=5.780s
+03:25:47 [proxy] [chat    ] qw=5.740s bw=0.000s ttft=0.081s tg=0.329s e2e=6.150s
+03:25:47 [proxy] [chat    ] qw=0.495s bw=0.000s ttft=0.081s tg=0.324s e2e=0.899s
+03:25:51 [proxy] [chat    ] arrived  priority=0  seq=47
+03:25:52 [proxy] [moderate] arrived  priority=1  seq=48
+03:25:52 [proxy] [moderate] qw=5.213s bw=0.000s ttft=0.526s tg=4.730s e2e=10.469s
+03:25:52 [proxy] [chat    ] arrived  priority=0  seq=49
+03:25:53 [proxy] [batch   ] arrived  priority=2  seq=50
+03:25:53 [proxy] [chat    ] qw=1.653s bw=0.000s ttft=0.261s tg=0.347s e2e=2.261s
+03:25:53 [proxy] [moderate] arrived  priority=1  seq=51
+03:25:53 [proxy] [chat    ] qw=0.568s bw=0.000s ttft=0.088s tg=0.357s e2e=1.013s
+03:25:55 [proxy] [chat    ] arrived  priority=0  seq=52
+03:25:56 [proxy] [batch   ] qw=63.411s svc=27.233s e2e=90.644s preempts=2
+03:25:57 [proxy] [chat    ] qw=1.082s bw=0.000s ttft=0.278s tg=0.306s e2e=1.666s
+03:25:59 [proxy] [chat    ] arrived  priority=0  seq=53
+03:25:59 [proxy] [moderate] arrived  priority=1  seq=54
+03:26:00 [proxy] [moderate] qw=1.221s bw=0.000s ttft=0.516s tg=5.811s e2e=7.547s
+03:26:00 [proxy] [chat    ] qw=0.825s bw=0.000s ttft=0.262s tg=0.311s e2e=1.398s
+03:26:01 [proxy] [chat    ] arrived  priority=0  seq=55
+03:26:05 [proxy] [chat    ] arrived  priority=0  seq=56
+03:26:06 [proxy] [moderate] qw=4.106s bw=0.000s ttft=0.499s tg=5.363s e2e=9.968s
+03:26:06 [proxy] [chat    ] qw=2.376s bw=0.000s ttft=0.256s tg=0.339s e2e=2.971s
+03:26:07 [proxy] [chat    ] qw=1.630s bw=0.000s ttft=0.081s tg=0.322s e2e=2.034s
+03:26:09 [proxy] [chat    ] arrived  priority=0  seq=57
+03:26:09 [proxy] [batch   ] PREEMPTED after 2.6s (#1) -> requeued
+03:26:10 [proxy] [moderate] qw=0.735s bw=0.000s ttft=0.531s tg=6.104s e2e=7.371s
+03:26:10 [proxy] [chat    ] qw=0.012s bw=0.000s ttft=0.245s tg=0.318s e2e=0.575s
+03:26:11 [proxy] [chat    ] arrived  priority=0  seq=58
+03:26:11 [proxy] [batch   ] PREEMPTED after 0.8s (#2) -> requeued
+03:26:12 [proxy] [chat    ] qw=0.020s bw=0.000s ttft=0.892s tg=0.331s e2e=1.244s
+03:26:14 [proxy] [chat    ] arrived  priority=0  seq=59
+03:26:14 [proxy] [batch   ] PREEMPTED after 4.3s (#1) -> requeued
+03:26:14 [proxy] [chat    ] arrived  priority=0  seq=60
+03:26:15 [proxy] [chat    ] qw=0.024s bw=0.000s ttft=0.271s tg=0.300s e2e=0.595s
+03:26:15 [proxy] [chat    ] qw=0.492s bw=0.000s ttft=0.077s tg=0.309s e2e=0.879s
+03:26:17 [proxy] [batch   ] arrived  priority=2  seq=61
+03:26:22 [proxy] [chat    ] arrived  priority=0  seq=62
+03:26:22 [proxy] [batch   ] PREEMPTED after 6.5s (#2) -> requeued
+03:26:22 [proxy] [chat    ] qw=0.010s bw=0.000s ttft=0.250s tg=0.334s e2e=0.594s
+03:26:29 [proxy] [moderate] arrived  priority=1  seq=63
+03:26:29 [proxy] [chat    ] arrived  priority=0  seq=64
+03:26:30 [proxy] [chat    ] arrived  priority=0  seq=65
+03:26:33 [proxy] [chat    ] arrived  priority=0  seq=66
+03:26:33 [proxy] [chat    ] arrived  priority=0  seq=67
+03:26:36 [proxy] [chat    ] arrived  priority=0  seq=68
+03:26:40 [proxy] [moderate] arrived  priority=1  seq=69
+03:26:41 [proxy] [batch   ] arrived  priority=2  seq=70
+03:26:42 [proxy] [moderate] arrived  priority=1  seq=71
+03:26:42 [proxy] [chat    ] arrived  priority=0  seq=72
+03:26:43 [proxy] [batch   ] qw=64.848s svc=28.003s e2e=92.850s preempts=2
+03:26:43 [proxy] [chat    ] qw=10.494s bw=0.000s ttft=0.281s tg=0.366s e2e=11.141s
+03:26:44 [proxy] [chat    ] qw=10.259s bw=0.000s ttft=0.083s tg=0.361s e2e=10.703s
+03:26:44 [proxy] [chat    ] qw=8.258s bw=0.000s ttft=0.088s tg=0.351s e2e=8.698s
+03:26:45 [proxy] [chat    ] qw=8.292s bw=0.000s ttft=0.086s tg=0.343s e2e=8.721s
+03:26:45 [proxy] [chat    ] qw=6.177s bw=0.000s ttft=0.081s tg=0.332s e2e=6.590s
+03:26:46 [proxy] [chat    ] qw=2.963s bw=0.000s ttft=0.083s tg=0.337s e2e=3.383s
+03:26:46 [proxy] [chat    ] arrived  priority=0  seq=73
+03:26:47 [proxy] [chat    ] arrived  priority=0  seq=74
+03:26:48 [proxy] [chat    ] arrived  priority=0  seq=75
+03:26:49 [proxy] [chat    ] arrived  priority=0  seq=76
+03:26:51 [proxy] [moderate] qw=14.182s bw=0.000s ttft=0.536s tg=4.833s e2e=19.551s
+03:26:52 [proxy] [chat    ] qw=4.751s bw=0.000s ttft=0.271s tg=0.354s e2e=5.376s
+03:26:52 [proxy] [batch   ] qw=26.809s svc=26.723s e2e=53.532s preempts=2
+03:26:52 [proxy] [chat    ] qw=4.811s bw=0.000s ttft=0.083s tg=0.523s e2e=5.416s
+03:26:53 [proxy] [chat    ] qw=4.176s bw=0.000s ttft=0.260s tg=0.305s e2e=4.741s
+03:26:53 [proxy] [chat    ] qw=3.029s bw=0.000s ttft=0.078s tg=0.729s e2e=3.835s
+03:26:58 [proxy] [moderate] qw=10.883s bw=0.000s ttft=0.499s tg=4.481s e2e=15.864s
+03:26:59 [proxy] [moderate] qw=12.298s bw=0.000s ttft=0.502s tg=5.525s e2e=18.325s
+03:27:04 [proxy] [chat    ] arrived  priority=0  seq=77
+03:27:04 [proxy] [batch   ] PREEMPTED after 5.1s (#1) -> requeued
+03:27:04 [proxy] [chat    ] qw=0.013s bw=0.000s ttft=0.295s tg=0.330s e2e=0.638s
+03:27:07 [proxy] [batch   ] arrived  priority=2  seq=78
+03:27:09 [proxy] [chat    ] arrived  priority=0  seq=79
+03:27:09 [proxy] [batch   ] PREEMPTED after 4.7s (#2) -> requeued
+03:27:09 [proxy] [chat    ] arrived  priority=0  seq=80
+03:27:09 [proxy] [batch   ] PREEMPTED after 11.2s (#1) -> requeued
+03:27:10 [proxy] [chat    ] qw=0.023s bw=0.000s ttft=0.289s tg=0.496s e2e=0.807s
+03:27:11 [proxy] [chat    ] qw=0.017s bw=0.000s ttft=0.387s tg=1.496s e2e=1.899s
+03:27:17 [proxy] [chat    ] arrived  priority=0  seq=81
+03:27:17 [proxy] [batch   ] PREEMPTED after 4.3s (#2) -> requeued
+03:27:17 [proxy] [chat    ] qw=0.015s bw=0.000s ttft=0.246s tg=0.309s e2e=0.570s
+03:27:18 [proxy] [moderate] arrived  priority=1  seq=82
+03:27:19 [proxy] [chat    ] arrived  priority=0  seq=83
+03:27:26 [proxy] [chat    ] arrived  priority=0  seq=84
+03:27:28 [proxy] [batch   ] arrived  priority=2  seq=85
+03:27:30 [proxy] [chat    ] arrived  priority=0  seq=86
+03:27:34 [proxy] [chat    ] arrived  priority=0  seq=87
+03:27:37 [proxy] [chat    ] arrived  priority=0  seq=88
+03:27:37 [proxy] [chat    ] arrived  priority=0  seq=89
+03:27:38 [proxy] [chat    ] arrived  priority=0  seq=90
+03:27:38 [proxy] [chat    ] arrived  priority=0  seq=91
+03:27:40 [proxy] [batch   ] qw=30.233s svc=26.379s e2e=56.612s preempts=2
+03:27:41 [proxy] [chat    ] qw=21.545s bw=0.000s ttft=0.271s tg=0.350s e2e=22.166s
+03:27:41 [proxy] [chat    ] qw=15.238s bw=0.000s ttft=0.082s tg=0.329s e2e=15.649s
+03:27:42 [proxy] [chat    ] qw=11.685s bw=0.000s ttft=0.082s tg=0.334s e2e=12.100s
+03:27:42 [proxy] [chat    ] arrived  priority=0  seq=92
+03:27:42 [proxy] [chat    ] qw=7.683s bw=0.000s ttft=0.087s tg=0.329s e2e=8.099s
+03:27:43 [proxy] [chat    ] qw=5.447s bw=0.000s ttft=0.077s tg=0.332s e2e=5.856s
+03:27:43 [proxy] [batch   ] qw=54.696s svc=25.222s e2e=79.917s preempts=2
+03:27:43 [proxy] [chat    ] arrived  priority=0  seq=93
+03:27:43 [proxy] [chat    ] qw=5.737s bw=0.000s ttft=0.081s tg=0.458s e2e=6.276s
+03:27:43 [proxy] [chat    ] qw=5.181s bw=0.000s ttft=0.237s tg=0.299s e2e=5.718s
+03:27:44 [proxy] [chat    ] qw=5.396s bw=0.000s ttft=0.078s tg=0.302s e2e=5.776s
+03:27:44 [proxy] [chat    ] qw=1.434s bw=0.000s ttft=0.071s tg=0.303s e2e=1.808s
+03:27:44 [proxy] [chat    ] qw=0.455s bw=0.000s ttft=0.072s tg=0.679s e2e=1.206s
+03:27:46 [proxy] [batch   ] arrived  priority=2  seq=94
+03:27:52 [proxy] [chat    ] arrived  priority=0  seq=95
+03:27:52 [proxy] [batch   ] PREEMPTED after 5.1s (#1) -> requeued
+03:27:53 [proxy] [moderate] arrived  priority=1  seq=96
+03:27:53 [proxy] [chat    ] qw=0.022s bw=0.000s ttft=0.265s tg=0.313s e2e=0.600s
+03:27:53 [proxy] [moderate] qw=25.336s bw=0.000s ttft=0.460s tg=6.466s e2e=32.263s
+03:27:53 [proxy] [chat    ] arrived  priority=0  seq=97
+03:27:53 [proxy] [batch   ] PREEMPTED after 0.1s (#2) -> requeued
+03:27:54 [proxy] [chat    ] qw=0.110s bw=0.000s ttft=0.267s tg=0.350s e2e=0.726s
+03:27:59 [proxy] [chat    ] arrived  priority=0  seq=98
+03:27:59 [proxy] [chat    ] arrived  priority=0  seq=99
+03:28:00 [proxy] [moderate] qw=0.093s bw=0.000s ttft=0.521s tg=6.754s e2e=7.367s
+03:28:01 [proxy] [chat    ] qw=1.173s bw=0.000s ttft=0.255s tg=0.315s e2e=1.742s
+03:28:01 [proxy] [chat    ] qw=1.260s bw=0.000s ttft=0.076s tg=0.315s e2e=1.651s
+03:28:03 [proxy] [chat    ] arrived  priority=0  seq=100
+03:28:03 [proxy] [batch   ] PREEMPTED after 2.4s (#1) -> requeued
+03:28:04 [proxy] [chat    ] qw=0.016s bw=0.000s ttft=0.294s tg=0.326s e2e=0.636s
+03:28:05 [proxy] [chat    ] arrived  priority=0  seq=101
+03:28:05 [proxy] [batch   ] PREEMPTED after 1.4s (#2) -> requeued
+03:28:06 [proxy] [chat    ] arrived  priority=0  seq=102
+03:28:06 [proxy] [chat    ] qw=0.422s bw=0.000s ttft=0.275s tg=0.315s e2e=1.011s
+03:28:06 [proxy] [chat    ] qw=0.259s bw=0.000s ttft=0.081s tg=0.328s e2e=0.668s
+03:28:08 [proxy] [moderate] arrived  priority=1  seq=103
+03:28:09 [proxy] [chat    ] arrived  priority=0  seq=104
+03:28:09 [proxy] [chat    ] arrived  priority=0  seq=105
+03:28:10 [proxy] [chat    ] arrived  priority=0  seq=106
+03:28:11 [proxy] [moderate] arrived  priority=1  seq=107
+03:28:15 [proxy] [chat    ] arrived  priority=0  seq=108
+03:28:17 [proxy] [chat    ] arrived  priority=0  seq=109
+03:28:18 [proxy] [chat    ] arrived  priority=0  seq=110
+03:28:19 [proxy] [chat    ] arrived  priority=0  seq=111
+03:28:20 [proxy] [chat    ] arrived  priority=0  seq=112
+03:28:20 [proxy] [batch   ] arrived  priority=2  seq=113
+03:28:21 [proxy] [chat    ] arrived  priority=0  seq=114
+03:28:26 [proxy] [batch   ] qw=41.559s svc=29.555s e2e=71.113s preempts=2
+03:28:27 [proxy] [chat    ] qw=14.257s bw=0.000s ttft=0.297s tg=0.331s e2e=14.885s
+03:28:28 [proxy] [chat    ] qw=14.873s bw=0.000s ttft=0.088s tg=0.341s e2e=15.302s
+03:28:28 [proxy] [chat    ] qw=14.957s bw=0.000s ttft=0.085s tg=0.335s e2e=15.377s
+03:28:28 [proxy] [chat    ] qw=9.845s bw=0.000s ttft=0.077s tg=0.365s e2e=10.287s
+03:28:29 [proxy] [chat    ] qw=8.063s bw=0.000s ttft=0.086s tg=0.359s e2e=8.509s
+03:28:29 [proxy] [chat    ] qw=8.044s bw=0.000s ttft=0.084s tg=0.323s e2e=8.451s
+03:28:30 [proxy] [chat    ] qw=7.112s bw=0.000s ttft=0.085s tg=0.340s e2e=7.537s
+03:28:30 [proxy] [chat    ] qw=7.067s bw=0.000s ttft=0.080s tg=0.323s e2e=7.471s
+03:28:31 [proxy] [chat    ] qw=6.299s bw=0.000s ttft=0.084s tg=0.347s e2e=6.731s
+03:28:33 [proxy] [chat    ] arrived  priority=0  seq=115
+03:28:33 [proxy] [chat    ] arrived  priority=0  seq=116
+03:28:35 [proxy] [chat    ] arrived  priority=0  seq=117
+03:28:35 [proxy] [chat    ] arrived  priority=0  seq=118
+03:28:36 [proxy] [batch   ] qw=35.307s svc=26.424s e2e=61.730s preempts=2
+03:28:36 [proxy] [moderate] qw=19.444s bw=0.000s ttft=0.492s tg=5.041s e2e=24.977s
+03:28:36 [proxy] [chat    ] qw=2.369s bw=0.000s ttft=0.283s tg=0.479s e2e=3.131s
+03:28:37 [proxy] [chat    ] qw=2.717s bw=0.000s ttft=0.247s tg=0.301s e2e=3.264s
+03:28:37 [proxy] [chat    ] qw=1.936s bw=0.000s ttft=0.074s tg=0.312s e2e=2.323s
+03:28:37 [proxy] [chat    ] qw=1.514s bw=0.000s ttft=0.079s tg=0.732s e2e=2.324s
+03:28:39 [proxy] [batch   ] arrived  priority=2  seq=119
+03:28:50 [proxy] [chat    ] arrived  priority=0  seq=120
+03:28:50 [proxy] [batch   ] PREEMPTED after 12.7s (#1) -> requeued
+03:28:51 [proxy] [moderate] arrived  priority=1  seq=121
+03:28:51 [proxy] [chat    ] qw=0.016s bw=0.000s ttft=0.280s tg=0.327s e2e=0.623s
+03:28:52 [proxy] [chat    ] arrived  priority=0  seq=122
+03:28:54 [proxy] [moderate] qw=23.182s bw=0.000s ttft=0.501s tg=16.456s e2e=40.139s
+03:28:54 [proxy] [chat    ] qw=1.657s bw=0.000s ttft=0.267s tg=0.307s e2e=2.231s
+03:28:56 [proxy] [moderate] arrived  priority=1  seq=123
+03:28:56 [proxy] [chat    ] arrived  priority=0  seq=124
+03:28:56 [proxy] [batch   ] PREEMPTED after 1.9s (#2) -> requeued
+03:28:56 [proxy] [chat    ] arrived  priority=0  seq=125
+03:29:00 [proxy] [chat    ] qw=0.012s bw=0.000s ttft=0.299s tg=0.305s e2e=0.617s
+03:29:00 [proxy] [chat    ] arrived  priority=0  seq=126
+03:29:00 [proxy] [chat    ] qw=0.497s bw=0.000s ttft=0.079s tg=0.302s e2e=0.877s
+03:29:00 [proxy] [moderate] qw=0.152s bw=0.000s ttft=0.493s tg=6.192s e2e=6.838s
+03:29:01 [proxy] [moderate] arrived  priority=1  seq=127
+03:29:01 [proxy] [chat    ] qw=0.028s bw=0.000s ttft=0.076s tg=0.305s e2e=0.410s
+03:29:02 [proxy] [chat    ] arrived  priority=0  seq=128
+03:29:03 [proxy] [chat    ] arrived  priority=0  seq=129
+03:29:04 [proxy] [moderate] arrived  priority=1  seq=130
+03:29:04 [proxy] [chat    ] arrived  priority=0  seq=131
+03:29:06 [proxy] [moderate] qw=0.157s bw=0.000s ttft=0.478s tg=4.426s e2e=5.061s
+03:29:06 [proxy] [chat    ] qw=3.927s bw=0.000s ttft=0.253s tg=0.319s e2e=4.499s
+03:29:06 [proxy] [moderate] qw=1.651s bw=0.000s ttft=0.077s tg=5.804s e2e=7.532s
+03:29:07 [proxy] [chat    ] qw=3.512s bw=0.000s ttft=0.080s tg=0.468s e2e=4.060s
+03:29:07 [proxy] [chat    ] qw=1.875s bw=0.000s ttft=0.236s tg=0.732s e2e=2.843s
+03:29:08 [proxy] [batch   ] arrived  priority=2  seq=132
+03:29:10 [proxy] [chat    ] arrived  priority=0  seq=133
+03:29:11 [proxy] [chat    ] arrived  priority=0  seq=134
+03:29:13 [proxy] [moderate] qw=2.879s bw=0.000s ttft=0.504s tg=5.915s e2e=9.299s
+03:29:14 [proxy] [chat    ] qw=3.461s bw=0.000s ttft=0.242s tg=0.326s e2e=4.029s
+03:29:14 [proxy] [chat    ] qw=2.728s bw=0.000s ttft=0.124s tg=0.339s e2e=3.191s
+03:29:17 [proxy] [chat    ] arrived  priority=0  seq=135
+03:29:17 [proxy] [batch   ] PREEMPTED after 2.4s (#1) -> requeued
+03:29:17 [proxy] [moderate] arrived  priority=1  seq=136
+03:29:17 [proxy] [chat    ] arrived  priority=0  seq=137
+03:29:17 [proxy] [chat    ] qw=0.021s bw=0.000s ttft=0.265s tg=0.327s e2e=0.612s
+03:29:18 [proxy] [chat    ] qw=0.218s bw=0.000s ttft=0.078s tg=0.314s e2e=0.610s
+03:29:19 [proxy] [moderate] arrived  priority=1  seq=138
+03:29:21 [proxy] [chat    ] arrived  priority=0  seq=139
+03:29:21 [proxy] [chat    ] arrived  priority=0  seq=140
+03:29:22 [proxy] [chat    ] arrived  priority=0  seq=141
+03:29:23 [proxy] [moderate] qw=0.762s bw=0.000s ttft=0.506s tg=5.036s e2e=6.304s
+03:29:24 [proxy] [chat    ] qw=2.264s bw=0.000s ttft=0.255s tg=0.333s e2e=2.852s
+03:29:24 [proxy] [chat    ] arrived  priority=0  seq=142
+03:29:24 [proxy] [chat    ] qw=2.352s bw=0.000s ttft=0.080s tg=0.339s e2e=2.771s
+03:29:25 [proxy] [chat    ] qw=2.042s bw=0.000s ttft=0.079s tg=0.335s e2e=2.456s
+03:29:25 [proxy] [chat    ] qw=0.602s bw=0.000s ttft=0.089s tg=0.378s e2e=1.069s
+03:29:27 [proxy] [moderate] arrived  priority=1  seq=143
+03:29:28 [proxy] [chat    ] arrived  priority=0  seq=144
+03:29:30 [proxy] [moderate] arrived  priority=1  seq=145
+03:29:30 [proxy] [moderate] qw=5.723s bw=0.000s ttft=0.513s tg=4.947s e2e=11.184s
+03:29:31 [proxy] [chat    ] qw=2.974s bw=0.000s ttft=0.265s tg=0.330s e2e=3.570s
+03:29:32 [proxy] [chat    ] arrived  priority=0  seq=146
+03:29:39 [proxy] [batch   ] qw=72.387s svc=28.434s e2e=100.820s preempts=2
+03:29:39 [proxy] [chat    ] qw=4.143s bw=0.000s ttft=0.259s tg=0.310s e2e=4.712s
+03:29:40 [proxy] [moderate] qw=3.704s bw=0.000s ttft=0.509s tg=5.550s e2e=9.762s
+03:29:40 [proxy] [moderate] arrived  priority=1  seq=147
+03:29:43 [proxy] [chat    ] arrived  priority=0  seq=148
+03:29:43 [proxy] [batch   ] PREEMPTED after 3.4s (#2) -> requeued
+03:29:44 [proxy] [chat    ] qw=0.020s bw=0.000s ttft=0.355s tg=0.302s e2e=0.677s
+03:29:45 [proxy] [moderate] qw=6.296s bw=0.000s ttft=0.517s tg=5.521s e2e=12.335s
+03:29:46 [proxy] [chat    ] arrived  priority=0  seq=149
+03:29:47 [proxy] [chat    ] arrived  priority=0  seq=150
+03:29:49 [proxy] [moderate] qw=3.752s bw=0.000s ttft=0.504s tg=4.512s e2e=8.768s
+03:29:49 [proxy] [chat    ] arrived  priority=0  seq=151
+03:29:50 [proxy] [chat    ] qw=3.567s bw=0.000s ttft=0.241s tg=0.308s e2e=4.115s
+03:29:50 [proxy] [chat    ] qw=2.319s bw=0.000s ttft=0.079s tg=0.324s e2e=2.722s
+03:29:51 [proxy] [chat    ] qw=0.791s bw=0.000s ttft=0.083s tg=0.321s e2e=1.194s
+03:29:52 [proxy] [chat    ] arrived  priority=0  seq=152
+03:29:52 [proxy] [batch   ] PREEMPTED after 1.7s (#1) -> requeued
+03:29:53 [proxy] [chat    ] qw=0.021s bw=0.000s ttft=0.293s tg=0.310s e2e=0.625s
+03:29:55 [proxy] [chat    ] arrived  priority=0  seq=153
+03:29:55 [proxy] [batch   ] PREEMPTED after 2.4s (#2) -> requeued
+03:29:56 [proxy] [chat    ] qw=0.013s bw=0.000s ttft=0.300s tg=0.318s e2e=0.631s
+03:30:04 [proxy] [chat    ] arrived  priority=0  seq=154
+03:30:15 [proxy] [chat    ] arrived  priority=0  seq=155
+03:30:16 [proxy] [moderate] arrived  priority=1  seq=156
+03:30:17 [proxy] [batch   ] qw=76.010s svc=28.733s e2e=104.743s preempts=2
+03:30:18 [proxy] [chat    ] qw=10.143s bw=0.000s ttft=0.279s tg=0.325s e2e=10.746s
+03:30:18 [proxy] [chat    ] qw=2.120s bw=0.000s ttft=0.078s tg=0.335s e2e=2.533s
+03:30:18 [proxy] [batch   ] arrived  priority=2  seq=157
+03:30:21 [proxy] [moderate] arrived  priority=1  seq=158
+03:30:22 [proxy] [batch   ] arrived  priority=2  seq=159
+03:30:22 [proxy] [moderate] qw=1.740s bw=0.000s ttft=0.514s tg=3.984s e2e=6.238s
+03:30:24 [proxy] [chat    ] arrived  priority=0  seq=160
+03:30:25 [proxy] [batch   ] qw=70.800s svc=26.558s e2e=97.358s preempts=2
+03:30:26 [proxy] [chat    ] qw=1.192s bw=0.000s ttft=0.273s tg=0.327s e2e=1.792s
+03:30:28 [proxy] [moderate] qw=1.699s bw=0.000s ttft=0.088s tg=5.500s e2e=7.287s
+03:30:33 [proxy] [chat    ] arrived  priority=0  seq=161
+03:30:33 [proxy] [batch   ] PREEMPTED after 4.7s (#1) -> requeued
+03:30:33 [proxy] [chat    ] qw=0.018s bw=0.000s ttft=0.232s tg=0.321s e2e=0.571s
+03:30:34 [proxy] [batch   ] arrived  priority=2  seq=162
+03:30:34 [proxy] [chat    ] arrived  priority=0  seq=163
+03:30:34 [proxy] [batch   ] PREEMPTED after 8.5s (#1) -> requeued
+03:30:35 [proxy] [chat    ] qw=0.019s bw=0.000s ttft=0.523s tg=0.310s e2e=0.852s
+03:30:37 [proxy] [moderate] arrived  priority=1  seq=164
+03:30:48 [proxy] [moderate] arrived  priority=1  seq=165
+03:30:49 [proxy] [batch   ] arrived  priority=2  seq=166
+03:30:52 [proxy] [chat    ] arrived  priority=0  seq=167
+03:30:52 [proxy] [batch   ] PREEMPTED after 13.3s (#2) -> requeued
+03:30:52 [proxy] [chat    ] qw=0.015s bw=0.000s ttft=0.276s tg=0.320s e2e=0.611s
+03:30:56 [proxy] [chat    ] arrived  priority=0  seq=168
+03:30:56 [proxy] [batch   ] PREEMPTED after 19.7s (#2) -> requeued
+03:30:57 [proxy] [chat    ] qw=0.010s bw=0.000s ttft=0.254s tg=0.307s e2e=0.572s
+03:30:57 [proxy] [chat    ] arrived  priority=0  seq=169
+03:30:58 [proxy] [moderate] qw=11.828s bw=0.000s ttft=0.510s tg=5.375s e2e=17.713s
+03:30:59 [proxy] [chat    ] qw=0.599s bw=0.000s ttft=0.288s tg=0.325s e2e=1.212s
+03:31:04 [proxy] [moderate] qw=8.300s bw=0.000s ttft=0.520s tg=6.777s e2e=15.598s
+03:31:04 [proxy] [chat    ] arrived  priority=0  seq=170
+03:31:07 [proxy] [moderate] arrived  priority=1  seq=171
+03:31:08 [proxy] [moderate] arrived  priority=1  seq=172
+03:31:11 [proxy] [moderate] arrived  priority=1  seq=173
+03:31:13 [proxy] [moderate] arrived  priority=1  seq=174
+03:31:25 [proxy] [chat    ] arrived  priority=0  seq=175
+03:31:27 [proxy] [batch   ] qw=102.227s svc=25.257s e2e=127.484s preempts=2
+03:31:27 [proxy] [chat    ] qw=20.010s bw=0.000s ttft=0.252s tg=0.307s e2e=20.568s
+03:31:28 [proxy] [chat    ] qw=2.688s bw=0.000s ttft=0.082s tg=0.333s e2e=3.102s
+03:31:28 [proxy] [chat    ] arrived  priority=0  seq=176
+03:31:31 [proxy] [batch   ] qw=42.912s svc=24.586s e2e=67.498s preempts=2
+03:31:32 [proxy] [chat    ] qw=3.281s bw=0.000s ttft=0.245s tg=0.299s e2e=3.825s
+03:31:34 [proxy] [moderate] qw=17.572s bw=0.000s ttft=0.553s tg=5.928s e2e=24.054s
+03:31:35 [proxy] [chat    ] arrived  priority=0  seq=177
+03:31:36 [proxy] [chat    ] arrived  priority=0  seq=178
+03:31:38 [proxy] [moderate] qw=20.574s bw=0.000s ttft=0.498s tg=5.354s e2e=26.426s
+03:31:38 [proxy] [chat    ] qw=3.095s bw=0.000s ttft=0.252s tg=0.321s e2e=3.668s
+03:31:39 [proxy] [chat    ] qw=2.803s bw=0.000s ttft=0.082s tg=0.344s e2e=3.229s
+03:31:40 [proxy] [moderate] qw=20.272s bw=0.000s ttft=0.081s tg=5.603s e2e=25.956s
+03:31:44 [proxy] [moderate] qw=22.961s bw=0.000s ttft=0.502s tg=4.869s e2e=28.333s
+03:31:58 [proxy] [chat    ] arrived  priority=0  seq=179
+03:31:58 [proxy] [batch   ] PREEMPTED after 10.7s (#1) -> requeued
+03:31:58 [proxy] [chat    ] arrived  priority=0  seq=180
+03:31:58 [proxy] [batch   ] PREEMPTED after 15.0s (#1) -> requeued
+03:31:59 [proxy] [chat    ] qw=0.012s bw=0.000s ttft=0.307s tg=0.495s e2e=0.814s
+03:32:00 [proxy] [chat    ] qw=0.027s bw=0.000s ttft=0.436s tg=1.465s e2e=1.928s
+03:32:05 [proxy] [chat    ] arrived  priority=0  seq=181
+03:32:05 [proxy] [batch   ] PREEMPTED after 4.8s (#2) -> requeued
+03:32:05 [proxy] [chat    ] qw=0.015s bw=0.000s ttft=0.261s tg=0.350s e2e=0.626s
+03:32:06 [proxy] [chat    ] arrived  priority=0  seq=182
+03:32:06 [proxy] [batch   ] PREEMPTED after 7.6s (#2) -> requeued
+03:32:07 [proxy] [chat    ] qw=0.013s bw=0.000s ttft=0.583s tg=0.298s e2e=0.894s
+03:32:09 [proxy] [moderate] arrived  priority=1  seq=183
+03:32:14 [proxy] [batch   ] arrived  priority=2  seq=184
+03:32:15 [proxy] [chat    ] arrived  priority=0  seq=185
+03:32:17 [proxy] [chat    ] arrived  priority=0  seq=186
+03:32:17 [proxy] [chat    ] arrived  priority=0  seq=187
+03:32:21 [proxy] [chat    ] arrived  priority=0  seq=188
+03:32:22 [proxy] [chat    ] arrived  priority=0  seq=189
+03:32:22 [proxy] [batch   ] arrived  priority=2  seq=190
+03:32:32 [proxy] [chat    ] arrived  priority=0  seq=191
+03:32:34 [proxy] [chat    ] arrived  priority=0  seq=192
+03:32:35 [proxy] [batch   ] qw=82.449s svc=26.920s e2e=109.369s preempts=2
+03:32:35 [proxy] [chat    ] arrived  priority=0  seq=193
+03:32:36 [proxy] [chat    ] qw=17.004s bw=0.000s ttft=0.291s tg=0.336s e2e=17.631s
+03:32:36 [proxy] [batch   ] qw=96.720s svc=25.752s e2e=122.471s preempts=2
+03:32:36 [proxy] [batch   ] arrived  priority=2  seq=194
+03:32:37 [proxy] [chat    ] qw=16.210s bw=0.000s ttft=0.483s tg=0.308s e2e=17.000s
+03:32:37 [proxy] [chat    ] qw=16.212s bw=0.000s ttft=0.523s tg=0.308s e2e=17.043s
+03:32:37 [proxy] [chat    ] qw=12.566s bw=0.000s ttft=0.043s tg=0.323s e2e=12.931s
+03:32:37 [proxy] [chat    ] qw=12.088s bw=0.000s ttft=0.079s tg=0.312s e2e=12.479s
+03:32:37 [proxy] [chat    ] qw=5.000s bw=0.000s ttft=0.065s tg=0.324s e2e=5.389s
+03:32:37 [proxy] [chat    ] qw=3.396s bw=0.000s ttft=0.078s tg=0.311s e2e=3.786s
+03:32:38 [proxy] [chat    ] arrived  priority=0  seq=195
+03:32:38 [proxy] [chat    ] qw=2.148s bw=0.000s ttft=0.067s tg=0.324s e2e=2.539s
+03:32:38 [proxy] [chat    ] qw=0.221s bw=0.000s ttft=0.077s tg=0.349s e2e=0.647s
+03:32:39 [proxy] [chat    ] arrived  priority=0  seq=196
+03:32:39 [proxy] [chat    ] arrived  priority=0  seq=197
+03:32:40 [proxy] [batch   ] PREEMPTED after 1.4s (#1) -> requeued
+03:32:40 [proxy] [chat    ] qw=0.796s bw=0.000s ttft=0.086s tg=0.331s e2e=1.213s
+03:32:40 [proxy] [chat    ] qw=0.833s bw=0.000s ttft=0.073s tg=0.325s e2e=1.231s
+03:32:42 [proxy] [chat    ] arrived  priority=0  seq=198
+03:32:42 [proxy] [batch   ] PREEMPTED after 2.0s (#2) -> requeued
+03:32:42 [proxy] [chat    ] arrived  priority=0  seq=199
+03:32:43 [proxy] [chat    ] arrived  priority=0  seq=200
+03:32:43 [proxy] [chat    ] qw=0.019s bw=0.000s ttft=0.265s tg=0.317s e2e=0.601s
+03:32:43 [proxy] [moderate] arrived  priority=1  seq=201
+03:32:43 [proxy] [chat    ] qw=0.510s bw=0.000s ttft=0.080s tg=0.335s e2e=0.925s
+03:32:44 [proxy] [chat    ] arrived  priority=0  seq=202
+03:32:44 [proxy] [chat    ] qw=0.714s bw=0.000s ttft=0.082s tg=0.358s e2e=1.154s
+03:32:44 [proxy] [chat    ] qw=0.242s bw=0.000s ttft=0.080s tg=0.315s e2e=0.637s
+03:32:45 [proxy] [moderate] qw=25.273s bw=0.000s ttft=0.080s tg=7.887s e2e=33.240s
+03:32:48 [proxy] [chat    ] arrived  priority=0  seq=203
+03:32:49 [proxy] [moderate] qw=1.226s bw=0.000s ttft=0.515s tg=4.671s e2e=6.411s
+03:32:50 [proxy] [chat    ] arrived  priority=0  seq=204
+03:32:50 [proxy] [chat    ] qw=1.418s bw=0.000s ttft=0.279s tg=0.308s e2e=2.005s
+03:32:50 [proxy] [chat    ] qw=0.404s bw=0.000s ttft=0.082s tg=0.328s e2e=0.814s
+03:32:51 [proxy] [chat    ] arrived  priority=0  seq=205
+03:32:51 [proxy] [chat    ] arrived  priority=0  seq=206
+03:32:52 [proxy] [batch   ] PREEMPTED after 1.3s (#1) -> requeued
+03:32:52 [proxy] [chat    ] qw=1.008s bw=0.000s ttft=0.257s tg=0.326s e2e=1.591s
+03:32:53 [proxy] [chat    ] qw=1.169s bw=0.000s ttft=0.083s tg=0.318s e2e=1.570s
+03:32:57 [proxy] [chat    ] arrived  priority=0  seq=207
+03:32:57 [proxy] [batch   ] PREEMPTED after 4.3s (#2) -> requeued
+03:32:58 [proxy] [chat    ] qw=0.019s bw=0.000s ttft=0.261s tg=0.322s e2e=0.602s
+03:33:08 [proxy] [chat    ] arrived  priority=0  seq=208
+03:33:10 [proxy] [chat    ] arrived  priority=0  seq=209
+03:33:11 [proxy] [chat    ] arrived  priority=0  seq=210
+03:33:13 [proxy] [chat    ] arrived  priority=0  seq=211
+03:33:13 [proxy] [chat    ] arrived  priority=0  seq=212
+03:33:14 [proxy] [moderate] arrived  priority=1  seq=213
+03:33:17 [proxy] [batch   ] qw=107.207s svc=28.247s e2e=135.454s preempts=2
+03:33:17 [proxy] [chat    ] qw=8.961s bw=0.000s ttft=0.278s tg=0.318s e2e=9.556s
+03:33:18 [proxy] [chat    ] qw=7.611s bw=0.000s ttft=0.084s tg=0.346s e2e=8.041s
+03:33:18 [proxy] [chat    ] qw=6.534s bw=0.000s ttft=0.085s tg=0.323s e2e=6.942s
+03:33:18 [proxy] [chat    ] qw=5.125s bw=0.000s ttft=0.085s tg=0.343s e2e=5.553s
+03:33:19 [proxy] [chat    ] qw=5.406s bw=0.000s ttft=0.089s tg=0.337s e2e=5.832s
+03:33:20 [proxy] [batch   ] arrived  priority=2  seq=214
+03:33:25 [proxy] [moderate] qw=5.180s bw=0.000s ttft=0.505s tg=5.856s e2e=11.541s
+03:33:26 [proxy] [chat    ] arrived  priority=0  seq=215
+03:33:26 [proxy] [batch   ] PREEMPTED after 0.5s (#1) -> requeued
+03:33:26 [proxy] [chat    ] qw=0.007s bw=0.000s ttft=0.292s tg=0.330s e2e=0.628s
+03:33:28 [proxy] [chat    ] arrived  priority=0  seq=216
+03:33:28 [proxy] [batch   ] PREEMPTED after 1.7s (#2) -> requeued
+03:33:29 [proxy] [batch   ] qw=40.727s svc=28.076s e2e=68.802s preempts=2
+03:33:29 [proxy] [chat    ] qw=0.014s bw=0.000s ttft=0.288s tg=0.344s e2e=0.646s
+03:33:33 [proxy] [moderate] arrived  priority=1  seq=217
+03:33:38 [proxy] [chat    ] arrived  priority=0  seq=218
+03:33:38 [proxy] [batch   ] PREEMPTED after 8.8s (#1) -> requeued
+03:33:38 [proxy] [chat    ] arrived  priority=0  seq=219
+03:33:41 [proxy] [chat    ] qw=0.018s bw=0.000s ttft=0.144s tg=0.333s e2e=0.495s
+03:33:41 [proxy] [moderate] arrived  priority=1  seq=220
+03:33:41 [proxy] [chat    ] qw=0.340s bw=0.000s ttft=0.077s tg=0.324s e2e=0.742s
+03:33:43 [proxy] [moderate] arrived  priority=1  seq=221
+03:33:44 [proxy] [chat    ] arrived  priority=0  seq=222
+03:33:46 [proxy] [moderate] qw=5.071s bw=0.000s ttft=0.447s tg=4.662s e2e=10.181s
+03:33:47 [proxy] [batch   ] arrived  priority=2  seq=223
+03:33:47 [proxy] [chat    ] qw=2.036s bw=0.000s ttft=0.257s tg=0.335s e2e=2.627s
+03:33:49 [proxy] [chat    ] arrived  priority=0  seq=224
+03:33:51 [proxy] [moderate] qw=5.871s bw=0.000s ttft=0.534s tg=3.885s e2e=10.291s
+03:33:52 [proxy] [chat    ] qw=2.501s bw=0.000s ttft=0.247s tg=0.324s e2e=3.071s
+03:33:57 [proxy] [batch   ] qw=61.031s svc=25.818s e2e=86.850s preempts=2
+03:33:58 [proxy] [moderate] qw=9.216s bw=0.000s ttft=0.452s tg=5.222s e2e=14.889s
+03:33:58 [proxy] [moderate] arrived  priority=1  seq=225
+03:34:03 [proxy] [moderate] arrived  priority=1  seq=226
+03:34:08 [proxy] [chat    ] arrived  priority=0  seq=227
+03:34:08 [proxy] [batch   ] PREEMPTED after 10.1s (#1) -> requeued
+03:34:09 [proxy] [chat    ] qw=0.021s bw=0.000s ttft=0.333s tg=0.331s e2e=0.685s
+03:34:10 [proxy] [chat    ] arrived  priority=0  seq=228
+03:34:10 [proxy] [batch   ] PREEMPTED after 13.0s (#2) -> requeued
+03:34:11 [proxy] [chat    ] qw=0.017s bw=0.000s ttft=0.237s tg=0.317s e2e=0.570s
+03:34:11 [proxy] [chat    ] arrived  priority=0  seq=229
+03:34:12 [proxy] [chat    ] arrived  priority=0  seq=230
+03:34:12 [proxy] [moderate] arrived  priority=1  seq=231
+03:34:17 [proxy] [chat    ] arrived  priority=0  seq=232
+03:34:18 [proxy] [moderate] qw=10.715s bw=0.000s ttft=0.531s tg=5.837s e2e=17.084s
+03:34:18 [proxy] [chat    ] qw=3.780s bw=0.000s ttft=0.255s tg=0.317s e2e=4.352s
+03:34:19 [proxy] [moderate] qw=8.428s bw=0.000s ttft=0.512s tg=4.202s e2e=13.141s
+03:34:19 [proxy] [chat    ] qw=3.695s bw=0.000s ttft=0.076s tg=0.475s e2e=4.246s
+03:34:19 [proxy] [chat    ] arrived  priority=0  seq=233
+03:34:20 [proxy] [chat    ] qw=2.050s bw=0.000s ttft=0.247s tg=0.735s e2e=3.031s
+03:34:20 [proxy] [chat    ] arrived  priority=0  seq=234
+03:34:20 [proxy] [chat    ] arrived  priority=0  seq=235
+03:34:20 [proxy] [chat    ] qw=0.542s bw=0.000s ttft=0.076s tg=0.315s e2e=0.933s
+03:34:20 [proxy] [chat    ] qw=0.392s bw=0.000s ttft=0.073s tg=0.316s e2e=0.781s
+03:34:21 [proxy] [chat    ] qw=0.561s bw=0.000s ttft=0.075s tg=0.313s e2e=0.950s
+03:34:25 [proxy] [chat    ] arrived  priority=0  seq=236
+03:34:25 [proxy] [moderate] qw=4.185s bw=0.000s ttft=0.501s tg=5.702s e2e=10.388s
+03:34:26 [proxy] [chat    ] qw=0.138s bw=0.000s ttft=0.258s tg=0.319s e2e=0.715s
+03:34:30 [proxy] [chat    ] arrived  priority=0  seq=237
+03:34:30 [proxy] [batch   ] PREEMPTED after 4.6s (#2) -> requeued
+03:34:31 [proxy] [chat    ] qw=0.015s bw=0.000s ttft=0.280s tg=0.312s e2e=0.607s
+03:34:35 [proxy] [chat    ] arrived  priority=0  seq=238
+03:34:52 [proxy] [batch   ] qw=96.047s svc=28.558s e2e=124.605s preempts=2
+03:34:53 [proxy] [chat    ] qw=14.778s bw=0.000s ttft=0.260s tg=0.323s e2e=15.361s
+03:35:01 [proxy] [batch   ] qw=65.209s svc=27.381s e2e=92.590s preempts=2
+03:35:15 [proxy] [batch   ] qw=60.148s svc=22.087s e2e=82.235s preempts=0

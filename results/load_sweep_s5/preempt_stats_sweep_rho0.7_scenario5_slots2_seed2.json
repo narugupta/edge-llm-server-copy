@@ -1,0 +1,8 @@
+{
+  "preemptions": 48,
+  "wasted_s": 190.06957544000397,
+  "completed_after_preempt": 23,
+  "max_preempts_one_request": 2,
+  "preempt_batch": true,
+  "max_preemptions": 2
+}

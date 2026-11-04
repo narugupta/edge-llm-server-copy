@@ -1,0 +1,79 @@
+[
+  {
+    "dispatch_to_first_token": 0,
+    "req_id": "50131099",
+    "client_id": "batch",
+    "priority": 2,
+    "queue_wait": 0.0063,
+    "ttft_at_proxy": 0.9499,
+    "token_generation": 22.8161,
+    "total_service": 23.766,
+    "total_e2e": 23.7723
+  },
+  {
+    "dispatch_to_first_token": 0,
+    "req_id": "a269adfb",
+    "client_id": "batch",
+    "priority": 2,
+    "queue_wait": 0.0107,
+    "ttft_at_proxy": 1.4244,
+    "token_generation": 21.9059,
+    "total_service": 23.3303,
+    "total_e2e": 23.341
+  },
+  {
+    "dispatch_to_first_token": 0,
+    "req_id": "30d0461f",
+    "client_id": "chat",
+    "priority": 0,
+    "queue_wait": 2.1645,
+    "ttft_at_proxy": 0.5233,
+    "token_generation": 0.2853,
+    "total_service": 0.8086,
+    "total_e2e": 2.9731
+  },
+  {
+    "dispatch_to_first_token": 0,
+    "req_id": "2bb5643a",
+    "client_id": "chat",
+    "priority": 0,
+    "queue_wait": 10.0171,
+    "ttft_at_proxy": 0.5804,
+    "token_generation": 0.2864,
+    "total_service": 0.8667,
+    "total_e2e": 10.8838
+  },
+  {
+    "dispatch_to_first_token": 0,
+    "req_id": "e261c0db",
+    "client_id": "batch",
+    "priority": 2,
+    "queue_wait": 16.0587,
+    "ttft_at_proxy": 0.9045,
+    "token_generation": 18.0756,
+    "total_service": 18.9801,
+    "total_e2e": 35.0388
+  },
+  {
+    "dispatch_to_first_token": 0,
+    "req_id": "9abab944",
+    "client_id": "chat",
+    "priority": 0,
+    "queue_wait": 0.0055,
+    "ttft_at_proxy": 0.0926,
+    "token_generation": 0.2806,
+    "total_service": 0.3732,
+    "total_e2e": 0.3787
+  },
+  {
+    "dispatch_to_first_token": 0,
+    "req_id": "b9543671",
+    "client_id": "chat",
+    "priority": 0,
+    "queue_wait": 0.0056,
+    "ttft_at_proxy": 0.0735,
+    "token_generation": 0.2489,
+    "total_service": 0.3223,
+    "total_e2e": 0.328
+  }
+]

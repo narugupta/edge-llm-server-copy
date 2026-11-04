@@ -1,0 +1,276 @@
+10:44:24 [proxy] Priority proxy listening on localhost:8082
+10:44:24 [proxy] Forwarding to llama-server at localhost:8081
+10:44:24 [proxy] Slot capacity  : 2
+10:44:24 [proxy] Arrival window : 5.0 ms
+10:44:24 [proxy] Dispatch gap   : 5.0 ms  (set 0 to disable)
+10:44:24 [proxy] Reservation    : SMART-PREEMPTION (adaptive) -- holds at most 1 slot for Chat, only while Chat is queued or in-flight right now; releases automatically when Chat goes idle
+10:44:24 [proxy] Columns: queue_wait | ttft_at_proxy | token_gen | e2e
+10:44:24 [proxy] ────────────────────────────────────────────────────────────
+10:44:28 [proxy] [moderate] arrived  priority=1  seq=1
+10:44:29 [proxy] [chat    ] arrived  priority=0  seq=2
+10:44:30 [proxy] [chat    ] arrived  priority=0  seq=3
+10:44:30 [proxy] [chat    ] qw=0.005s bw=0.000s ttft=0.663s tg=0.315s e2e=0.983s
+10:44:30 [proxy] [chat    ] qw=0.023s bw=0.000s ttft=0.076s tg=0.303s e2e=0.402s
+10:44:32 [proxy] [moderate] qw=0.015s bw=0.000s ttft=0.560s tg=3.879s e2e=4.454s
+10:44:38 [proxy] [chat    ] arrived  priority=0  seq=4
+10:44:38 [proxy] [chat    ] qw=0.006s bw=0.000s ttft=0.043s tg=0.240s e2e=0.289s
+10:44:53 [proxy] [chat    ] arrived  priority=0  seq=5
+10:44:53 [proxy] [chat    ] qw=0.006s bw=0.000s ttft=0.046s tg=0.251s e2e=0.303s
+10:44:54 [proxy] [chat    ] arrived  priority=0  seq=6
+10:44:54 [proxy] [chat    ] qw=0.006s bw=0.000s ttft=0.046s tg=0.246s e2e=0.298s
+10:44:59 [proxy] [chat    ] arrived  priority=0  seq=7
+10:44:59 [proxy] [chat    ] qw=0.005s bw=0.000s ttft=0.050s tg=0.257s e2e=0.312s
+10:45:01 [proxy] [chat    ] arrived  priority=0  seq=8
+10:45:01 [proxy] [chat    ] qw=0.005s bw=0.000s ttft=0.057s tg=0.260s e2e=0.322s
+10:45:02 [proxy] [moderate] arrived  priority=1  seq=9
+10:45:03 [proxy] [chat    ] arrived  priority=0  seq=10
+10:45:04 [proxy] [chat    ] qw=0.006s bw=0.000s ttft=0.397s tg=0.295s e2e=0.698s
+10:45:06 [proxy] [chat    ] arrived  priority=0  seq=11
+10:45:06 [proxy] [moderate] qw=0.007s bw=0.000s ttft=0.349s tg=4.539s e2e=4.895s
+10:45:06 [proxy] [chat    ] qw=0.006s bw=0.000s ttft=0.067s tg=0.294s e2e=0.366s
+10:45:09 [proxy] [moderate] arrived  priority=1  seq=12
+10:45:12 [proxy] [batch   ] arrived  priority=2  seq=13
+10:45:13 [proxy] [moderate] arrived  priority=1  seq=14
+10:45:15 [proxy] [moderate] qw=0.006s bw=0.000s ttft=0.054s tg=6.098s e2e=6.158s
+10:45:15 [proxy] [chat    ] arrived  priority=0  seq=15
+10:45:16 [proxy] [chat    ] arrived  priority=0  seq=16
+10:45:20 [proxy] [moderate] qw=2.569s bw=0.000s ttft=0.079s tg=5.020s e2e=7.668s
+10:45:21 [proxy] [chat    ] qw=4.991s bw=0.000s ttft=0.235s tg=0.303s e2e=5.529s
+10:45:21 [proxy] [chat    ] qw=4.924s bw=0.000s ttft=0.083s tg=0.324s e2e=5.331s
+10:45:30 [proxy] [chat    ] arrived  priority=0  seq=17
+10:45:30 [proxy] [chat    ] qw=0.006s bw=0.000s ttft=0.084s tg=0.327s e2e=0.417s
+10:45:32 [proxy] [chat    ] arrived  priority=0  seq=18
+10:45:33 [proxy] [chat    ] qw=0.006s bw=0.000s ttft=0.076s tg=0.326s e2e=0.408s
+10:45:33 [proxy] [chat    ] arrived  priority=0  seq=19
+10:45:34 [proxy] [chat    ] qw=0.006s bw=0.000s ttft=0.075s tg=0.344s e2e=0.424s
+10:45:34 [proxy] [batch   ] qw=0.006s bw=0.000s ttft=1.138s tg=21.305s e2e=22.449s
+10:45:41 [proxy] [chat    ] arrived  priority=0  seq=20
+10:45:42 [proxy] [chat    ] qw=0.006s bw=0.000s ttft=0.062s tg=0.243s e2e=0.312s
+10:45:50 [proxy] [moderate] arrived  priority=1  seq=21
+10:45:50 [proxy] [moderate] arrived  priority=1  seq=22
+10:45:55 [proxy] [moderate] qw=0.006s bw=0.000s ttft=0.398s tg=4.357s e2e=4.760s
+10:45:56 [proxy] [chat    ] arrived  priority=0  seq=23
+10:45:56 [proxy] [chat    ] qw=0.006s bw=0.000s ttft=0.224s tg=0.312s e2e=0.542s
+10:45:58 [proxy] [chat    ] arrived  priority=0  seq=24
+10:45:58 [proxy] [moderate] qw=0.006s bw=0.000s ttft=0.060s tg=7.764s e2e=7.830s
+10:45:59 [proxy] [chat    ] qw=0.006s bw=0.000s ttft=0.053s tg=0.253s e2e=0.311s
+10:46:02 [proxy] [chat    ] arrived  priority=0  seq=25
+10:46:02 [proxy] [chat    ] arrived  priority=0  seq=26
+10:46:03 [proxy] [chat    ] qw=0.006s bw=0.000s ttft=0.041s tg=0.670s e2e=0.717s
+10:46:03 [proxy] [chat    ] qw=0.015s bw=0.000s ttft=0.467s tg=0.274s e2e=0.757s
+10:46:06 [proxy] [chat    ] arrived  priority=0  seq=27
+10:46:07 [proxy] [chat    ] qw=0.005s bw=0.000s ttft=0.044s tg=0.245s e2e=0.295s
+10:46:08 [proxy] [chat    ] arrived  priority=0  seq=28
+10:46:08 [proxy] [chat    ] qw=0.006s bw=0.000s ttft=0.049s tg=0.251s e2e=0.306s
+10:46:12 [proxy] [moderate] arrived  priority=1  seq=29
+10:46:12 [proxy] [chat    ] arrived  priority=0  seq=30
+10:46:13 [proxy] [chat    ] qw=0.005s bw=0.000s ttft=0.077s tg=0.306s e2e=0.388s
+10:46:16 [proxy] [moderate] qw=0.006s bw=0.000s ttft=0.467s tg=3.671s e2e=4.143s
+10:46:16 [proxy] [chat    ] arrived  priority=0  seq=31
+10:46:16 [proxy] [chat    ] qw=0.005s bw=0.000s ttft=0.049s tg=0.265s e2e=0.320s
+10:46:18 [proxy] [chat    ] arrived  priority=0  seq=32
+10:46:18 [proxy] [chat    ] qw=0.006s bw=0.000s ttft=0.049s tg=0.264s e2e=0.318s
+10:46:23 [proxy] [batch   ] arrived  priority=2  seq=33
+10:46:23 [proxy] [chat    ] arrived  priority=0  seq=34
+10:46:25 [proxy] [chat    ] qw=0.006s bw=0.000s ttft=1.344s tg=0.310s e2e=1.660s
+10:46:28 [proxy] [chat    ] arrived  priority=0  seq=35
+10:46:28 [proxy] [chat    ] arrived  priority=0  seq=36
+10:46:28 [proxy] [chat    ] qw=0.006s bw=0.000s ttft=0.080s tg=0.343s e2e=0.428s
+10:46:29 [proxy] [chat    ] qw=0.321s bw=0.000s ttft=0.080s tg=0.304s e2e=0.705s
+10:46:36 [proxy] [chat    ] arrived  priority=0  seq=37
+10:46:36 [proxy] [chat    ] qw=0.006s bw=0.000s ttft=0.072s tg=0.313s e2e=0.391s
+10:46:38 [proxy] [chat    ] arrived  priority=0  seq=38
+10:46:38 [proxy] [chat    ] qw=0.006s bw=0.000s ttft=0.087s tg=0.330s e2e=0.423s
+10:46:41 [proxy] [batch   ] arrived  priority=2  seq=39
+10:46:45 [proxy] [batch   ] qw=0.005s bw=0.000s ttft=1.086s tg=22.092s e2e=23.184s
+10:46:58 [proxy] [moderate] arrived  priority=1  seq=40
+10:47:00 [proxy] [chat    ] arrived  priority=0  seq=41
+10:47:02 [proxy] [moderate] arrived  priority=1  seq=42
+10:47:04 [proxy] [moderate] qw=0.006s bw=0.000s ttft=0.096s tg=5.490s e2e=5.591s
+10:47:05 [proxy] [chat    ] qw=3.969s bw=0.000s ttft=0.262s tg=0.355s e2e=4.587s
+10:47:06 [proxy] [batch   ] qw=0.006s bw=0.000s ttft=1.302s tg=23.183s e2e=24.491s
+10:47:08 [proxy] [moderate] qw=2.233s bw=0.000s ttft=0.512s tg=3.232s e2e=5.978s
+10:47:09 [proxy] [moderate] arrived  priority=1  seq=43
+10:47:13 [proxy] [moderate] qw=0.006s bw=0.000s ttft=0.107s tg=4.298s e2e=4.411s
+10:47:14 [proxy] [chat    ] arrived  priority=0  seq=44
+10:47:14 [proxy] [chat    ] qw=0.006s bw=0.000s ttft=0.380s tg=0.274s e2e=0.660s
+10:47:22 [proxy] [chat    ] arrived  priority=0  seq=45
+10:47:22 [proxy] [chat    ] qw=0.006s bw=0.000s ttft=0.044s tg=0.273s e2e=0.323s
+10:47:23 [proxy] [chat    ] arrived  priority=0  seq=46
+10:47:23 [proxy] [chat    ] qw=0.006s bw=0.000s ttft=0.051s tg=0.261s e2e=0.317s
+10:47:25 [proxy] [chat    ] arrived  priority=0  seq=47
+10:47:25 [proxy] [chat    ] qw=0.015s bw=0.000s ttft=0.053s tg=0.262s e2e=0.330s
+10:47:26 [proxy] [chat    ] arrived  priority=0  seq=48
+10:47:27 [proxy] [chat    ] qw=0.006s bw=0.000s ttft=0.044s tg=0.253s e2e=0.303s
+10:47:31 [proxy] [chat    ] arrived  priority=0  seq=49
+10:47:31 [proxy] [chat    ] qw=0.006s bw=0.000s ttft=0.043s tg=0.254s e2e=0.303s
+10:47:35 [proxy] [chat    ] arrived  priority=0  seq=50
+10:47:36 [proxy] [chat    ] qw=0.006s bw=0.000s ttft=0.047s tg=0.258s e2e=0.311s
+10:47:45 [proxy] [chat    ] arrived  priority=0  seq=51
+10:47:45 [proxy] [chat    ] qw=0.006s bw=0.000s ttft=0.056s tg=0.261s e2e=0.322s
+10:47:49 [proxy] [chat    ] arrived  priority=0  seq=52
+10:47:50 [proxy] [chat    ] qw=0.011s bw=0.000s ttft=0.046s tg=0.249s e2e=0.306s
+10:47:55 [proxy] [chat    ] arrived  priority=0  seq=53
+10:47:55 [proxy] [chat    ] qw=0.006s bw=0.000s ttft=0.046s tg=0.240s e2e=0.292s
+10:47:59 [proxy] [chat    ] arrived  priority=0  seq=54
+10:48:00 [proxy] [chat    ] qw=0.006s bw=0.000s ttft=0.041s tg=0.251s e2e=0.298s
+10:48:19 [proxy] [chat    ] arrived  priority=0  seq=55
+10:48:19 [proxy] [chat    ] qw=0.005s bw=0.000s ttft=0.050s tg=0.249s e2e=0.305s
+10:48:23 [proxy] [moderate] arrived  priority=1  seq=56
+10:48:24 [proxy] [batch   ] arrived  priority=2  seq=57
+10:48:26 [proxy] [chat    ] arrived  priority=0  seq=58
+10:48:27 [proxy] [moderate] arrived  priority=1  seq=59
+10:48:28 [proxy] [moderate] qw=0.006s bw=0.000s ttft=0.378s tg=4.998s e2e=5.381s
+10:48:29 [proxy] [chat    ] qw=1.743s bw=0.000s ttft=0.210s tg=0.291s e2e=2.245s
+10:48:31 [proxy] [batch   ] arrived  priority=2  seq=60
+10:48:32 [proxy] [chat    ] arrived  priority=0  seq=61
+10:48:33 [proxy] [moderate] qw=1.706s bw=0.000s ttft=0.421s tg=4.147s e2e=6.274s
+10:48:34 [proxy] [chat    ] qw=1.055s bw=0.000s ttft=0.218s tg=0.292s e2e=1.565s
+10:48:36 [proxy] [chat    ] arrived  priority=0  seq=62
+10:48:37 [proxy] [moderate] arrived  priority=1  seq=63
+10:48:47 [proxy] [chat    ] arrived  priority=0  seq=64
+10:48:49 [proxy] [batch   ] qw=0.005s bw=0.000s ttft=1.236s tg=24.286s e2e=25.528s
+10:48:50 [proxy] [chat    ] qw=13.661s bw=0.000s ttft=0.238s tg=0.314s e2e=14.212s
+10:48:50 [proxy] [chat    ] qw=3.027s bw=0.000s ttft=0.085s tg=0.337s e2e=3.449s
+10:48:51 [proxy] [chat    ] arrived  priority=0  seq=65
+10:48:55 [proxy] [moderate] qw=13.743s bw=0.000s ttft=0.418s tg=4.801s e2e=18.963s
+10:48:56 [proxy] [chat    ] qw=4.494s bw=0.000s ttft=0.235s tg=0.332s e2e=5.061s
+10:48:58 [proxy] [batch   ] qw=3.000s bw=0.000s ttft=1.073s tg=23.715s e2e=27.787s
+10:48:58 [proxy] [chat    ] arrived  priority=0  seq=66
+10:48:59 [proxy] [chat    ] qw=0.006s bw=0.000s ttft=0.065s tg=0.264s e2e=0.335s
+10:49:05 [proxy] [chat    ] arrived  priority=0  seq=67
+10:49:06 [proxy] [chat    ] qw=0.013s bw=0.000s ttft=0.049s tg=0.250s e2e=0.312s
+10:49:13 [proxy] [chat    ] arrived  priority=0  seq=68
+10:49:13 [proxy] [chat    ] qw=0.005s bw=0.000s ttft=0.043s tg=0.247s e2e=0.296s
+10:49:15 [proxy] [chat    ] arrived  priority=0  seq=69
+10:49:15 [proxy] [chat    ] qw=0.006s bw=0.000s ttft=0.059s tg=0.263s e2e=0.327s
+10:49:15 [proxy] [chat    ] arrived  priority=0  seq=70
+10:49:16 [proxy] [chat    ] qw=0.006s bw=0.000s ttft=0.061s tg=0.255s e2e=0.321s
+10:49:20 [proxy] [chat    ] arrived  priority=0  seq=71
+10:49:20 [proxy] [chat    ] qw=0.006s bw=0.000s ttft=0.041s tg=0.244s e2e=0.291s
+10:49:22 [proxy] [chat    ] arrived  priority=0  seq=72
+10:49:23 [proxy] [chat    ] qw=0.006s bw=0.000s ttft=0.040s tg=0.245s e2e=0.291s
+10:49:40 [proxy] [chat    ] arrived  priority=0  seq=73
+10:49:41 [proxy] [chat    ] qw=0.006s bw=0.000s ttft=0.044s tg=0.253s e2e=0.303s
+10:49:43 [proxy] [chat    ] arrived  priority=0  seq=74
+10:49:43 [proxy] [chat    ] qw=0.014s bw=0.000s ttft=0.057s tg=0.246s e2e=0.318s
+10:49:47 [proxy] [chat    ] arrived  priority=0  seq=75
+10:49:47 [proxy] [chat    ] qw=0.006s bw=0.000s ttft=0.042s tg=0.246s e2e=0.294s
+10:49:47 [proxy] [chat    ] arrived  priority=0  seq=76
+10:49:48 [proxy] [chat    ] qw=0.006s bw=0.000s ttft=0.045s tg=0.250s e2e=0.301s
+10:49:56 [proxy] [batch   ] arrived  priority=2  seq=77
+10:49:57 [proxy] [chat    ] arrived  priority=0  seq=78
+10:49:57 [proxy] [chat    ] arrived  priority=0  seq=79
+10:49:58 [proxy] [chat    ] qw=0.006s bw=0.000s ttft=0.445s tg=0.305s e2e=0.755s
+10:49:58 [proxy] [chat    ] qw=0.561s bw=0.000s ttft=0.074s tg=0.306s e2e=0.941s
+10:49:58 [proxy] [chat    ] arrived  priority=0  seq=80
+10:49:59 [proxy] [chat    ] qw=0.006s bw=0.000s ttft=0.073s tg=0.292s e2e=0.370s
+10:50:00 [proxy] [chat    ] arrived  priority=0  seq=81
+10:50:01 [proxy] [chat    ] qw=0.005s bw=0.000s ttft=0.062s tg=0.290s e2e=0.357s
+10:50:03 [proxy] [chat    ] arrived  priority=0  seq=82
+10:50:03 [proxy] [chat    ] qw=0.006s bw=0.000s ttft=0.061s tg=0.311s e2e=0.378s
+10:50:04 [proxy] [chat    ] arrived  priority=0  seq=83
+10:50:04 [proxy] [chat    ] qw=0.006s bw=0.000s ttft=0.078s tg=0.304s e2e=0.388s
+10:50:10 [proxy] [chat    ] arrived  priority=0  seq=84
+10:50:11 [proxy] [chat    ] qw=0.006s bw=0.000s ttft=0.061s tg=0.338s e2e=0.405s
+10:50:14 [proxy] [chat    ] arrived  priority=0  seq=85
+10:50:14 [proxy] [chat    ] qw=0.006s bw=0.000s ttft=0.090s tg=0.312s e2e=0.408s
+10:50:17 [proxy] [batch   ] arrived  priority=2  seq=86
+10:50:17 [proxy] [batch   ] qw=0.009s bw=0.000s ttft=1.111s tg=20.304s e2e=21.424s
+10:50:18 [proxy] [chat    ] arrived  priority=0  seq=87
+10:50:19 [proxy] [chat    ] qw=0.009s bw=0.000s ttft=0.060s tg=0.326s e2e=0.396s
+10:50:22 [proxy] [batch   ] arrived  priority=2  seq=88
+10:50:27 [proxy] [moderate] arrived  priority=1  seq=89
+10:50:36 [proxy] [chat    ] arrived  priority=0  seq=90
+10:50:41 [proxy] [batch   ] qw=0.006s bw=0.000s ttft=0.086s tg=24.113s e2e=24.206s
+10:50:41 [proxy] [chat    ] qw=4.227s bw=0.000s ttft=0.269s tg=0.331s e2e=4.827s
+10:50:47 [proxy] [moderate] qw=14.522s bw=0.000s ttft=0.506s tg=5.750s e2e=20.777s
+10:50:48 [proxy] [batch   ] qw=0.006s bw=0.000s ttft=1.218s tg=25.028s e2e=26.252s
+10:50:51 [proxy] [chat    ] arrived  priority=0  seq=91
+10:50:51 [proxy] [chat    ] qw=0.006s bw=0.000s ttft=0.299s tg=0.256s e2e=0.561s
+10:50:55 [proxy] [chat    ] arrived  priority=0  seq=92
+10:50:55 [proxy] [chat    ] arrived  priority=0  seq=93
+10:50:56 [proxy] [chat    ] qw=0.005s bw=0.000s ttft=0.065s tg=0.620s e2e=0.691s
+10:50:56 [proxy] [chat    ] qw=0.007s bw=0.000s ttft=0.402s tg=0.271s e2e=0.679s
+10:50:59 [proxy] [chat    ] arrived  priority=0  seq=94
+10:50:59 [proxy] [chat    ] qw=0.006s bw=0.000s ttft=0.043s tg=0.260s e2e=0.308s
+10:51:00 [proxy] [chat    ] arrived  priority=0  seq=95
+10:51:00 [proxy] [chat    ] qw=0.006s bw=0.000s ttft=0.045s tg=0.258s e2e=0.309s
+10:51:07 [proxy] [chat    ] arrived  priority=0  seq=96
+10:51:08 [proxy] [chat    ] qw=0.015s bw=0.000s ttft=0.042s tg=0.251s e2e=0.307s
+10:51:08 [proxy] [chat    ] arrived  priority=0  seq=97
+10:51:08 [proxy] [chat    ] qw=0.006s bw=0.000s ttft=0.044s tg=0.268s e2e=0.318s
+10:51:12 [proxy] [chat    ] arrived  priority=0  seq=98
+10:51:12 [proxy] [chat    ] qw=0.006s bw=0.000s ttft=0.045s tg=0.242s e2e=0.294s
+10:51:22 [proxy] [chat    ] arrived  priority=0  seq=99
+10:51:23 [proxy] [chat    ] qw=0.006s bw=0.000s ttft=0.049s tg=0.246s e2e=0.301s
+10:51:29 [proxy] [chat    ] arrived  priority=0  seq=100
+10:51:29 [proxy] [chat    ] qw=0.006s bw=0.000s ttft=0.046s tg=0.250s e2e=0.301s
+10:51:45 [proxy] [chat    ] arrived  priority=0  seq=101
+10:51:45 [proxy] [chat    ] qw=0.006s bw=0.000s ttft=0.042s tg=0.249s e2e=0.296s
+10:51:52 [proxy] [moderate] arrived  priority=1  seq=102
+10:51:55 [proxy] [moderate] qw=0.006s bw=0.000s ttft=0.391s tg=3.685s e2e=4.082s
+10:51:57 [proxy] [moderate] arrived  priority=1  seq=103
+10:51:57 [proxy] [chat    ] arrived  priority=0  seq=104
+10:51:57 [proxy] [chat    ] qw=0.007s bw=0.000s ttft=0.084s tg=0.287s e2e=0.379s
+10:52:00 [proxy] [moderate] qw=0.006s bw=0.000s ttft=0.047s tg=3.393s e2e=3.445s
+10:52:11 [proxy] [chat    ] arrived  priority=0  seq=105
+10:52:11 [proxy] [chat    ] qw=0.006s bw=0.000s ttft=0.100s tg=0.337s e2e=0.443s
+10:52:14 [proxy] [chat    ] arrived  priority=0  seq=106
+10:52:14 [proxy] [chat    ] qw=0.005s bw=0.000s ttft=0.049s tg=0.284s e2e=0.339s
+10:52:15 [proxy] [chat    ] arrived  priority=0  seq=107
+10:52:16 [proxy] [chat    ] qw=0.006s bw=0.000s ttft=0.045s tg=0.267s e2e=0.318s
+10:52:19 [proxy] [moderate] arrived  priority=1  seq=108
+10:52:21 [proxy] [chat    ] arrived  priority=0  seq=109
+10:52:22 [proxy] [chat    ] qw=0.005s bw=0.000s ttft=0.750s tg=0.342s e2e=1.098s
+10:52:24 [proxy] [moderate] qw=0.010s bw=0.000s ttft=0.479s tg=4.532s e2e=5.022s
+10:52:29 [proxy] [chat    ] arrived  priority=0  seq=110
+10:52:29 [proxy] [chat    ] qw=0.006s bw=0.000s ttft=0.044s tg=0.249s e2e=0.299s
+10:52:29 [proxy] [chat    ] arrived  priority=0  seq=111
+10:52:30 [proxy] [chat    ] qw=0.005s bw=0.000s ttft=0.042s tg=0.264s e2e=0.311s
+10:52:36 [proxy] [chat    ] arrived  priority=0  seq=112
+10:52:36 [proxy] [chat    ] qw=0.006s bw=0.000s ttft=0.041s tg=0.247s e2e=0.293s
+10:52:38 [proxy] [chat    ] arrived  priority=0  seq=113
+10:52:39 [proxy] [chat    ] qw=0.006s bw=0.000s ttft=0.041s tg=0.241s e2e=0.288s
+10:52:39 [proxy] [chat    ] arrived  priority=0  seq=114
+10:52:39 [proxy] [chat    ] qw=0.005s bw=0.000s ttft=0.043s tg=0.249s e2e=0.297s
+10:52:47 [proxy] [chat    ] arrived  priority=0  seq=115
+10:52:47 [proxy] [chat    ] qw=0.005s bw=0.000s ttft=0.043s tg=0.244s e2e=0.293s
+10:52:48 [proxy] [chat    ] arrived  priority=0  seq=116
+10:52:48 [proxy] [chat    ] qw=0.011s bw=0.000s ttft=0.052s tg=0.259s e2e=0.322s
+10:52:51 [proxy] [chat    ] arrived  priority=0  seq=117
+10:52:51 [proxy] [chat    ] qw=0.006s bw=0.000s ttft=0.045s tg=0.249s e2e=0.300s
+10:52:58 [proxy] [batch   ] arrived  priority=2  seq=118
+10:53:00 [proxy] [batch   ] arrived  priority=2  seq=119
+10:53:09 [proxy] [moderate] arrived  priority=1  seq=120
+10:53:11 [proxy] [chat    ] arrived  priority=0  seq=121
+10:53:16 [proxy] [chat    ] arrived  priority=0  seq=122
+10:53:17 [proxy] [chat    ] arrived  priority=0  seq=123
+10:53:23 [proxy] [batch   ] qw=0.006s bw=0.000s ttft=0.860s tg=23.942s e2e=24.808s
+10:53:24 [proxy] [chat    ] qw=11.587s bw=0.000s ttft=0.263s tg=0.321s e2e=12.170s
+10:53:24 [proxy] [batch   ] qw=0.010s bw=0.000s ttft=1.159s tg=23.173s e2e=24.342s
+10:53:24 [proxy] [chat    ] qw=7.595s bw=0.000s ttft=0.087s tg=0.487s e2e=8.169s
+10:53:25 [proxy] [chat    ] qw=6.590s bw=0.000s ttft=0.241s tg=0.699s e2e=7.530s
+10:53:28 [proxy] [moderate] qw=14.933s bw=0.000s ttft=0.474s tg=3.608s e2e=19.015s
+10:53:29 [proxy] [batch   ] arrived  priority=2  seq=124
+10:53:32 [proxy] [chat    ] arrived  priority=0  seq=125
+10:53:33 [proxy] [chat    ] arrived  priority=0  seq=126
+10:53:33 [proxy] [chat    ] qw=0.005s bw=0.000s ttft=0.060s tg=0.337s e2e=0.402s
+10:53:33 [proxy] [chat    ] qw=0.126s bw=0.000s ttft=0.095s tg=0.315s e2e=0.537s
+10:53:37 [proxy] [chat    ] arrived  priority=0  seq=127
+10:53:38 [proxy] [chat    ] qw=0.010s bw=0.000s ttft=0.088s tg=0.325s e2e=0.423s
+10:53:40 [proxy] [chat    ] arrived  priority=0  seq=128
+10:53:40 [proxy] [chat    ] qw=0.012s bw=0.000s ttft=0.089s tg=0.355s e2e=0.456s
+10:53:50 [proxy] [chat    ] arrived  priority=0  seq=129
+10:53:50 [proxy] [batch   ] qw=0.006s bw=0.000s ttft=0.982s tg=20.145s e2e=21.133s
+10:53:50 [proxy] [chat    ] qw=0.006s bw=0.000s ttft=0.088s tg=0.283s e2e=0.377s
+10:53:52 [proxy] [moderate] arrived  priority=1  seq=130
+10:53:54 [proxy] [chat    ] arrived  priority=0  seq=131
+10:53:54 [proxy] [chat    ] qw=0.006s bw=0.000s ttft=0.071s tg=0.330s e2e=0.407s
+10:53:57 [proxy] [moderate] qw=0.006s bw=0.000s ttft=0.062s tg=4.435s e2e=4.502s
+10:53:59 [proxy] [chat    ] arrived  priority=0  seq=132
+10:53:59 [proxy] [chat    ] qw=0.006s bw=0.000s ttft=0.043s tg=0.263s e2e=0.311s
+10:54:00 [proxy] [chat    ] arrived  priority=0  seq=133
+10:54:00 [proxy] [chat    ] qw=0.006s bw=0.000s ttft=0.042s tg=0.265s e2e=0.313s
+10:54:03 [proxy] [chat    ] arrived  priority=0  seq=134
+10:54:03 [proxy] [chat    ] qw=0.006s bw=0.000s ttft=0.042s tg=0.262s e2e=0.309s

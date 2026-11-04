@@ -1,0 +1,38 @@
+{
+ "label": "b64_prefill",
+ "args": {
+  "host": "localhost",
+  "port": 8081,
+  "label": "b64_prefill",
+  "prompt_tokens": 350,
+  "gen": 300,
+  "abort_after": 150,
+  "reps": 3,
+  "parts": "1"
+ },
+ "prefill": {
+  "100": 1.0535070969999651,
+  "300": 2.7519044439999334,
+  "600": 6.37914025300006
+ },
+ "resume_ttft_s": {
+  "immediate": [],
+  "after_other_requests": [],
+  "cold_reference": []
+ },
+ "resume_prompt_n_cache_n": {
+  "immediate": [],
+  "after_other_requests": [],
+  "cold_reference": []
+ },
+ "chat_ttft_s": {
+  "alone": [],
+  "other_slot_decoding": [],
+  "other_slot_prefilling_400tok": []
+ },
+ "summary": {
+  "immediate_s": NaN,
+  "after_other_s": NaN,
+  "cold_s": NaN
+ }
+}

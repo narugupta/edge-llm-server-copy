@@ -1,0 +1,68 @@
+
+edge-llm-server — Isolated Capacity Search (capacity_batch_slots2)
+  Client type    : batch  (Total mean < 60.0s)
+  Host:port      : localhost:8081  (direct to server)
+  Search mode    : adaptive
+  Start / Max n  : 1 / 64
+  Repeats/level  : 3  (+ 1 warm-up trial(s) discarded per level)
+  Slots (info)   : 2
+  Started        : 2026-10-30T01:11:03
+
+  Checking health …
+  Reachable — status: 'ok'
+
+  Concurrency 1 (batch) — 3 repeated trials  [adaptive]
+    warm-up 1/1 (discarded) …
+    trial 1/3: n_ok=  1/  1  mean= 19.179s  [ok]
+    trial 2/3: n_ok=  1/  1  mean= 19.189s  [ok]
+    trial 3/3: n_ok=  1/  1  mean= 19.288s  [ok]
+    -> pooled: n_ok=3/3  completion=1.0  mean=19.218s  [PASS]
+
+  Concurrency 2 (batch) — 3 repeated trials  [adaptive]
+    warm-up 1/1 (discarded) …
+    trial 1/3: n_ok=  2/  2  mean= 24.750s  [ok]
+    trial 2/3: n_ok=  2/  2  mean= 24.259s  [ok]
+    trial 3/3: n_ok=  2/  2  mean= 24.240s  [ok]
+    -> pooled: n_ok=6/6  completion=1.0  mean=24.416s  [PASS]
+
+  Concurrency 4 (batch) — 3 repeated trials  [adaptive]
+    warm-up 1/1 (discarded) …
+    trial 1/3: n_ok=  4/  4  mean= 37.053s  [ok]
+    trial 2/3: n_ok=  4/  4  mean= 36.348s  [ok]
+    trial 3/3: n_ok=  4/  4  mean= 37.045s  [ok]
+    -> pooled: n_ok=12/12  completion=1.0  mean=36.815s  [PASS]
+
+  Concurrency 8 (batch) — 3 repeated trials  [adaptive]
+    warm-up 1/1 (discarded) …
+    trial 1/3: n_ok=  8/  8  mean= 60.733s  [FAIL]
+    trial 2/3: n_ok=  8/  8  mean= 60.211s  [FAIL]
+    trial 3/3: n_ok=  8/  8  mean= 62.631s  [FAIL]
+    -> pooled: n_ok=24/24  completion=1.0  mean=61.192s  [FAIL]
+
+  Concurrency 6 (batch) — 3 repeated trials  [adaptive]
+    warm-up 1/1 (discarded) …
+    trial 1/3: n_ok=  6/  6  mean= 48.072s  [ok]
+    trial 2/3: n_ok=  6/  6  mean= 48.143s  [ok]
+    trial 3/3: n_ok=  6/  6  mean= 49.675s  [ok]
+    -> pooled: n_ok=18/18  completion=1.0  mean=48.630s  [PASS]
+
+  Concurrency 7 (batch) — 3 repeated trials  [adaptive]
+    warm-up 1/1 (discarded) …
+    trial 1/3: n_ok=  7/  7  mean= 56.042s  [ok]
+    trial 2/3: n_ok=  7/  7  mean= 54.790s  [ok]
+    trial 3/3: n_ok=  7/  7  mean= 54.194s  [ok]
+    -> pooled: n_ok=21/21  completion=1.0  mean=55.009s  [PASS]
+
+==========================================================================
+  CAPACITY SEARCH SUMMARY — capacity_batch_slots2
+==========================================================================
+  Max concurrency within SLO: 7
+    concurrency=   1  mean= 19.218s  completion=1.0  [PASS]
+    concurrency=   2  mean= 24.416s  completion=1.0  [PASS]
+    concurrency=   4  mean= 36.815s  completion=1.0  [PASS]
+    concurrency=   6  mean= 48.630s  completion=1.0  [PASS]
+    concurrency=   7  mean= 55.009s  completion=1.0  [PASS]
+    concurrency=   8  mean= 61.192s  completion=1.0  [FAIL]
+
+  Results saved → results/capacity-search-new/results_capacity_batch_slots2.json
+

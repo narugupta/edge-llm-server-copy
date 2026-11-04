@@ -31,4 +31,4 @@ Thumbs.db
 
 # Test outputs
 *.log
-deleted_files/
+deleted_files/results/load_sweep_v1_shared_server/server_log_*.txt

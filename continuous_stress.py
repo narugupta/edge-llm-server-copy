@@ -155,7 +155,9 @@ Note:
 """
 
 import argparse
+import hashlib
 import json
+import math
 import random
 import statistics
 import sys
@@ -190,35 +192,52 @@ SCENARIO_LABELS = {
 
 # ── Rate resolution ──────────────────────────────────────────────────────────
 
+# Service-time source for rate derivation (set from --service-time-source in main()).
+#   "uncontended": mean total_time at the LARGEST tested concurrency <= min(capacity, slots),
+#                  i.e. the heaviest level that still has no queueing and still met the SLO. This is closest to the true
+#                  time a request occupies a slot.
+#   "capacity":    mean total_time at the capacity level (previous behaviour). When
+#                  capacity > slots that level includes queueing, so it OVERSTATES service
+#                  time (2.4-4x in the Oct-2026 re-measurement) and the realized load comes
+#                  out far below the nominal one.
+_SVC = {"source": "uncontended", "slots": None}
+
+
+def _mean_total_time(level):
+    vals = [r["total_time"] for r in level.get("raw", [])
+            if r.get("total_time") is not None and not r.get("error")]
+    return statistics.mean(vals) if vals else None
+
+
 def _capacity_and_mean_service_time(path: str) -> tuple:
     """Shared by the derive path and the explicit-rate sanity check: reads a
     capacity_search.py result JSON and returns (capacity, mean_service_time).
 
-    IMPORTANT: "service time" here must be true slot-occupancy time --
-    total_time -- not whatever SLO metric capacity_search.py happened to be
-    checking at that concurrency. For chat/moderate, capacity_search.py's
-    pooled.mean is TTFT (their SLO metric), which is far shorter than the
-    actual time a request holds a slot -- using it would understate service
-    time and overstate any derived rate or sustainability check by roughly
-    ttft/total_time (often ~2x or more). So this always recomputes mean
-    total_time directly from that level's raw per-request records, which
-    capacity_search.py stores regardless of which metric was being checked."""
+    "Service time" must be slot-occupancy time (total_time), not the SLO metric (TTFT
+    for chat/moderate). Which concurrency level it is read from is controlled by
+    _SVC["source"] (see above)."""
     with open(path) as f:
         d = json.load(f)
     capacity = d["derived"]["max_concurrency_within_slo"]
     if capacity is None or capacity <= 0:
         raise ValueError(f"{path}: no usable capacity (max_concurrency_within_slo="
                           f"{capacity!r}) to derive a rate from")
-    level = next((l for l in d["levels"] if l["concurrency"] == capacity), None)
+    level = None
+    if _SVC["source"] == "uncontended" and _SVC["slots"]:
+        limit = min(capacity, _SVC["slots"])   # same effective_servers as Little's Law
+        usable = [l for l in d["levels"]
+                  if l["concurrency"] <= limit and _mean_total_time(l) is not None]
+        if usable:
+            level = max(usable, key=lambda l: l["concurrency"])
+    if level is None:   # "capacity" source, or no level <= slots was tested
+        level = next((l for l in d["levels"] if l["concurrency"] == capacity), None)
     if level is None:
         raise ValueError(f"{path}: capacity={capacity} but no matching level in "
                           f"'levels' to read service time from")
-    total_times = [r["total_time"] for r in level.get("raw", [])
-                   if r.get("total_time") is not None and not r.get("error")]
-    if not total_times:
-        raise ValueError(f"{path}: no usable total_time values in level {capacity}'s "
-                          f"raw records to compute mean service time from")
-    mean_service_time = statistics.mean(total_times)
+    mean_service_time = _mean_total_time(level)
+    if mean_service_time is None:
+        raise ValueError(f"{path}: no usable total_time values in level "
+                          f"{level['concurrency']}'s raw records")
     return capacity, mean_service_time
 
 
@@ -512,29 +531,194 @@ def _send_and_decrement(client_type, instance_id, host, port, results,
 
 # ── Evaluation ────────────────────────────────────────────────────────────────
 
+# ── Matched offered-load mode ────────────────────────────────────────────────
+
+def parse_mix(text):
+    """'8:2:1' -> {'chat': 0.727, 'moderate': 0.182, 'batch': 0.091} (request-count shares)."""
+    parts = [float(x) for x in text.split(":")]
+    if len(parts) != 3 or any(p < 0 for p in parts) or sum(parts) <= 0:
+        raise ValueError(f"--mix must be chat:moderate:batch non-negative numbers, got {text!r}")
+    tot = sum(parts)
+    return {"chat": parts[0] / tot, "moderate": parts[1] / tot, "batch": parts[2] / tot}
+
+
+def resolve_rates_offered_load(rho, mix_text, slots, duration, capacity_jsons, log):
+    """Offered load as a single NOMINAL utilization rho, split across types by a
+    fixed request-count mix.
+
+        mean_service  = sum_t share_t * service_time_t        (Step 1 service times)
+        lambda_total  = rho * slots / mean_service
+        lambda_t      = share_t * lambda_total
+
+    Why this form: the load is described by ONE number (rho) plus a fixed mix, so
+    it can be swept (rho = 0.5, 0.8, 1.0, 1.2 ...) and each point is identical
+    for every scheduling scenario. rho is NOMINAL: the Step 1 service times were
+    measured in isolation, so the real saturation point can differ -- the sweep
+    shows where it actually is.
+
+    Returns {client_type: (rate, detail, mean_service_time)}."""
+    shares = parse_mix(mix_text)
+    mst = {}
+    for ct in ("chat", "moderate", "batch"):
+        cj = capacity_jsons.get(ct)
+        if not cj:
+            raise ValueError(f"--offered-rho needs --{ct}-capacity-json (service time source)")
+        _, mst[ct] = _capacity_and_mean_service_time(cj)
+    mean_service = sum(shares[ct] * mst[ct] for ct in shares)
+    lam_total = rho * slots / mean_service
+    out = {}
+    for ct in ("chat", "moderate", "batch"):
+        rate = shares[ct] * lam_total
+        exp_n = rate * duration
+        detail = (f"offered-load: rho={rho} slots={slots} mix-share={shares[ct]:.3f} "
+                  f"mean_service={mean_service:.3f}s -> rate={rate:.4f}/s, expected_n~={exp_n:.1f}")
+        log(f"  {ct:<9s} rate = {rate:.4f}/s  (share {shares[ct]:.3f}, service {mst[ct]:.2f}s, "
+            f"expected n ~ {exp_n:.0f})")
+        out[ct] = (rate, detail, mst[ct])
+    if shares["chat"] * lam_total * duration < 100:
+        log("  NOTE: expected Chat samples < 100 -- p99 will not be reliable "
+            "(p95 needs >= 20). Increase --duration for tail metrics.")
+    return out
+
+
+# ── Seeded, replayable arrival schedules ─────────────────────────────────────
+
+def build_schedule(client_type, rate, duration, pattern, seed):
+    """Pre-generate arrival offsets (seconds from run start) for one type.
+
+    Identical (seed, type, rate, duration, pattern) -> identical schedule, so
+    S1/S2/S3 can be fed EXACTLY the same arrivals (matched comparison). Gaps are
+    unit-rate exponentials divided by `rate`, so a higher-rate schedule with the
+    same seed is the lower-rate one compressed in time (common random numbers
+    across load levels too)."""
+    if rate <= 0:
+        return []
+    rng = random.Random(f"{seed}:{client_type}")
+    offsets, t = [], 0.0
+    while True:
+        gap = (rng.expovariate(1.0) / rate) if pattern == "poisson" else (1.0 / rate)
+        t += gap
+        if t >= duration:
+            break
+        offsets.append(round(t, 6))
+    return offsets
+
+
+def schedule_digest(offsets):
+    return hashlib.sha1(json.dumps(offsets).encode()).hexdigest()[:12]
+
+
+def scheduled_arrival_generator(client_type, offsets, t0, session, host, port, timeout,
+                                results, results_lock, in_flight_counter, log):
+    """Fire one request per pre-generated offset (absolute times from the shared
+    t0, so sleeping error does not accumulate). Fire-and-forget, as before."""
+    threads = []
+    for n_fired, off in enumerate(offsets):
+        delay = (t0 + off) - time.perf_counter()
+        if delay > 0:
+            time.sleep(delay)
+        with in_flight_counter["lock"]:
+            in_flight_counter[client_type] += 1
+        t = threading.Thread(
+            target=_send_and_decrement,
+            args=(client_type, n_fired, host, port, results, results_lock,
+                  timeout, session, t0, in_flight_counter),
+            daemon=True,
+        )
+        threads.append(t)
+        t.start()
+    log(f"  [{client_type}] generator done: fired {len(threads)} scheduled arrivals")
+    return threads
+
+
+# ── Evaluation (tail-aware) ──────────────────────────────────────────────────
+
+def percentile(sorted_vals, p):
+    """Linear-interpolated percentile (numpy's default definition)."""
+    if not sorted_vals:
+        return None
+    k = (len(sorted_vals) - 1) * p / 100.0
+    lo = int(math.floor(k))
+    hi = min(lo + 1, len(sorted_vals) - 1)
+    return sorted_vals[lo] + (sorted_vals[hi] - sorted_vals[lo]) * (k - lo)
+
+
+def wilson_interval(k, n, z=1.96):
+    """95% Wilson score interval for a proportion k/n (sane for small n)."""
+    if n == 0:
+        return None
+    phat = k / n
+    denom = 1 + z * z / n
+    centre = (phat + z * z / (2 * n)) / denom
+    half = z * math.sqrt(phat * (1 - phat) / n + z * z / (4 * n * n)) / denom
+    return [round(max(0.0, centre - half), 4), round(min(1.0, centre + half), 4)]
+
+
 def summarise(values):
+    """Stats over COMPLETED requests only. NOTE: p99 here is linearly
+    interpolated; result files written before this change used a nearest-rank
+    lower index, so p99 is not comparable across the two."""
     valid = [v for v in values if v is not None]
     if not valid:
-        return {"n": 0, "mean": None, "p99": None, "max": None}
+        return {"n": 0, "mean": None, "p50": None, "p95": None, "p99": None, "max": None}
     sv = sorted(valid)
-    p99_idx = max(0, int(len(sv) * 0.99) - 1)
     return {"n": len(valid), "mean": round(statistics.mean(valid), 4),
-            "p99": round(sv[p99_idx], 4), "max": round(max(valid), 4)}
+            "p50": round(percentile(sv, 50), 4), "p95": round(percentile(sv, 95), 4),
+            "p99": round(percentile(sv, 99), 4), "max": round(max(valid), 4)}
 
 
-def evaluate_type(client_type, results):
+def evaluate_type(client_type, results, n_scheduled=None, censored_floors=None, timeout=150.0):
+    """Per-type evaluation.
+
+    n_scheduled / censored_floors handle requests still in flight when the drain
+    timeout expired. Dropping them (the old behaviour) silently removes the
+    SLOWEST requests, biasing every tail metric low exactly when the system is
+    overloaded. Here they are CENSORED: counted as arrivals, counted as SLO
+    violations, and entered into the tail percentiles at a lower-bound latency
+    (time from scheduled arrival to the end of the drain). Errored requests
+    (e.g. HTTP 504) are likewise counted as violations and enter the tail at
+    `timeout`. A percentile that lands on such a bound is flagged
+    `*_is_lower_bound` (true value >= reported)."""
     metric = SLO_CHECK[client_type]["metric"]
     threshold = SLO_CHECK[client_type]["threshold"]
     typed = [r for r in results if r["client_type"] == client_type]
     typed_sorted = sorted(typed, key=lambda r: r["wave_arrival_s"])
-    n_arrived = len(typed_sorted)
+    censored_floors = list(censored_floors or [])
+    n_arrived = n_scheduled if n_scheduled is not None else len(typed_sorted)
     errors = [r for r in typed_sorted if r["error"]]
     ok = [r for r in typed_sorted if not r["error"] and r.get(metric) is not None]
     values = [r[metric] for r in ok]
     stats = summarise(values)
 
-    violations = sum(1 for v in values if v > threshold) + len(errors)
+    n_over = sum(1 for v in values if v > threshold)
+    violations = n_over + len(errors) + len(censored_floors)
     violation_rate = round(violations / n_arrived, 4) if n_arrived else None
+
+    pairs = sorted([(v, False) for v in values]
+                   + [(timeout, True)] * len(errors)
+                   + [(f, True) for f in censored_floors])
+    tvals = [p[0] for p in pairs]
+    n_tail = len(pairs)
+
+    def tail_pct(p):
+        if n_tail == 0:
+            return None, False
+        k = (n_tail - 1) * p / 100.0
+        lo = int(math.floor(k))
+        hi = min(lo + 1, n_tail - 1)
+        return round(percentile(tvals, p), 4), (pairs[lo][1] or pairs[hi][1])
+
+    p50, _ = tail_pct(50)
+    p95, p95_lb = tail_pct(95)
+    p99, p99_lb = tail_pct(99)
+    tail = {
+        "n": n_tail,
+        "p50": p50, "p95": p95, "p99": p99,
+        "max": round(tvals[-1], 4) if n_tail else None,
+        "p95_is_lower_bound": p95_lb, "p99_is_lower_bound": p99_lb,
+        "max_is_lower_bound": bool(n_tail and pairs[-1][1]),
+        "p95_reliable": n_tail >= 20, "p99_reliable": n_tail >= 100,
+    }
 
     half = len(typed_sorted) // 2
     front = [r[metric] for r in typed_sorted[:half] if not r["error"] and r.get(metric) is not None]
@@ -546,15 +730,59 @@ def evaluate_type(client_type, results):
         "n_arrived": n_arrived,
         "n_completed": len(ok),
         "n_errors": len(errors),
+        "n_censored": len(censored_floors),
         "error_samples": sorted({e["error"] for e in errors})[:5],
         "completion_rate": round(len(ok) / n_arrived, 4) if n_arrived else None,
         "stats": stats,
+        "tail": tail,
+        "n_violations": violations,
         "slo_violation_rate": violation_rate,
+        "slo_violation_ci95": wilson_interval(violations, n_arrived),
         "front_half_mean": round(statistics.mean(front), 4) if front else None,
         "back_half_mean": round(statistics.mean(back), 4) if back else None,
         "degrading_over_run": (
             front and back and statistics.mean(back) > statistics.mean(front) * 1.2
         ),
+    }
+
+
+def compute_aggregate_metrics(results, generation_start, timeout, n_scheduled_total=None,
+                              n_censored_total=0, horizon_elapsed=None, slots=None, duration=None):
+    """Overall completion % and total wall-clock completion time, pooled over
+    all types. Errored requests are assumed to finish at t_start + timeout
+    (upper bound). If any request was still in flight at the drain deadline,
+    total_completion_time is only a LOWER bound (the run was cut off)."""
+    total_arrived = n_scheduled_total if n_scheduled_total is not None else len(results)
+    total_completed = sum(1 for r in results if not r["error"])
+    finish_times = []
+    for r in results:
+        if r["error"]:
+            finish_times.append(r["t_start"] + timeout)
+        elif r.get("total_time") is not None:
+            finish_times.append(r["t_start"] + r["total_time"])
+    tct = round(max(finish_times) - generation_start, 3) if finish_times else None
+    # REALIZED load: nominal rho comes from Step 1 service times measured on another
+    # day/machine state, so it does not transfer. This measures what actually
+    # happened: decode-busy slot-seconds / (slots * duration). Excludes prefill and
+    # queue wait, so it slightly UNDERestimates; use it to compare runs, not as an
+    # exact utilization.
+    realized = None
+    if slots and duration:
+        busy = sum((r["total_time"] - r["ttft"]) for r in results
+                   if not r["error"] and r.get("total_time") is not None and r.get("ttft") is not None)
+        realized = round(busy / (slots * duration), 4)
+    lower_bound = False
+    if n_censored_total > 0 and horizon_elapsed is not None:
+        tct = round(max(tct or 0.0, horizon_elapsed), 3)
+        lower_bound = True
+    return {
+        "total_arrived": total_arrived,
+        "total_completed": total_completed,
+        "n_censored": n_censored_total,
+        "overall_completion_rate": round(total_completed / total_arrived, 4) if total_arrived else None,
+        "total_completion_time": tct,
+        "total_completion_time_is_lower_bound": lower_bound,
+        "realized_busy_fraction": realized,
     }
 
 
@@ -623,6 +851,26 @@ def parse_args():
                          "active types, see warn_if_combined_unsustainable) used only "
                          "in --target-samples mode. Default 0.7.")
 
+    p.add_argument("--offered-rho", type=float, default=None,
+                    help="Matched offered-load mode: total NOMINAL utilization "
+                         "rho = sum(rate_t * service_time_t) / slots, split across "
+                         "types by --mix. Needs all three --*-capacity-json. "
+                         "Mutually exclusive with --target-samples.")
+    p.add_argument("--mix", default="8:2:1",
+                    help="chat:moderate:batch request-COUNT ratio for --offered-rho "
+                         "(default 8:2:1).")
+    p.add_argument("--seed", type=int, default=None,
+                    help="Seed for the pre-generated arrival schedule. Same seed + "
+                         "same rates/duration => identical arrivals in every "
+                         "scenario (matched comparison). Default: time-based, "
+                         "recorded in the result file.")
+    p.add_argument("--service-time-source", choices=["uncontended", "capacity"],
+                    default="uncontended",
+                    help="Which Step 1 level supplies the mean service time used to turn "
+                         "capacity/rho into arrival rates. 'uncontended' (default) = the "
+                         "largest tested concurrency <= min(capacity, --slots) (no queueing, SLO met); 'capacity' = "
+                         "the capacity level (old behaviour, overstates service time when "
+                         "capacity > slots).")
     p.add_argument("--label", default=None)
     p.add_argument("--output", default=None)
     return p.parse_args()
@@ -658,10 +906,24 @@ def main():
     print(f"  Duration       : {args.duration}s per type, {args.arrival_pattern} arrivals")
     print(f"  Started        : {datetime.now().isoformat(timespec='seconds')}\n")
 
+    _SVC["source"] = args.service_time_source
+    _SVC["slots"] = args.slots
+    print(f"  Service-time source: {_SVC['source']} (slots={args.slots})")
     print("  Resolving arrival rates …")
     rates, rate_details = {}, {}
     rates_and_mst = {}
-    if args.target_samples is not None:
+    if args.offered_rho is not None:
+        if args.target_samples is not None:
+            sys.exit("--offered-rho and --target-samples are mutually exclusive.")
+        print(f"  (offered-load mode: rho={args.offered_rho}, mix={args.mix})")
+        capacity_jsons = {ct: getattr(args, f"{ct}_capacity_json") for ct in ("chat", "moderate", "batch")}
+        resolved = resolve_rates_offered_load(
+            args.offered_rho, args.mix, args.slots, args.duration, capacity_jsons, log)
+        for ct, (rate, detail, mst) in resolved.items():
+            rates[ct] = rate
+            rate_details[ct] = detail
+            rates_and_mst[ct] = (rate, mst)
+    elif args.target_samples is not None:
         print(f"  (target-samples mode: aiming for {args.target_samples} samples/type, "
               f"combined-budget={args.combined_budget})")
         capacity_jsons = {ct: getattr(args, f"{ct}_capacity_json") for ct in ("chat", "moderate", "batch")}
@@ -696,22 +958,32 @@ def main():
     results_lock = threading.Lock()
     in_flight = {"chat": 0, "moderate": 0, "batch": 0, "lock": threading.Lock()}
 
+    seed = args.seed if args.seed is not None else int(time.time())
+    types = ("chat", "moderate", "batch")
+    schedules = {ct: build_schedule(ct, rates[ct], args.duration, args.arrival_pattern, seed)
+                 for ct in types}
+    digests = {ct: schedule_digest(schedules[ct]) for ct in types}
+    print(f"\n  Arrival schedule: seed={seed} (same seed + rates + duration => "
+          f"identical arrivals in every scenario)")
+    for ct in types:
+        print(f"    {ct:<9s} scheduled={len(schedules[ct]):5d}  digest={digests[ct]}")
+
     print(f"\n  Generating arrivals for {args.duration}s …")
-    gen_threads = []
-    all_request_threads = []
-    for ct in ("chat", "moderate", "batch"):
-        gt = threading.Thread(
-            target=lambda ct=ct: all_request_threads.extend(arrival_generator(
-                ct, rates[ct], args.duration, args.arrival_pattern, session,
-                args.host, args.port, args.timeout, results, results_lock,
-                in_flight, log,
-            )),
-            daemon=True,
-        )
-        gen_threads.append(gt)
+    t0 = time.perf_counter()
+    generation_start = t0
+    thread_lists = {}
+
+    def _run_generator(ct):
+        thread_lists[ct] = scheduled_arrival_generator(
+            ct, schedules[ct], t0, session, args.host, args.port, args.timeout,
+            results, results_lock, in_flight, log)
+
+    gen_threads = [threading.Thread(target=_run_generator, args=(ct,), daemon=True) for ct in types]
+    for gt in gen_threads:
         gt.start()
     for gt in gen_threads:
         gt.join()
+    all_request_threads = [t for ct in types for t in thread_lists.get(ct, [])]
 
     print(f"\n  Arrivals complete. Draining in-flight requests "
           f"(up to {args.drain_timeout}s) …")
@@ -722,24 +994,49 @@ def main():
             break
         t.join(timeout=remaining)
     still_running = sum(1 for t in all_request_threads if t.is_alive())
+    drain_end_elapsed = time.perf_counter() - t0
     if still_running:
-        print(f"  WARNING: {still_running} request(s) still in flight after "
-              f"drain timeout -- their results are incomplete/missing, not "
-              f"silently counted as failures. Increase --drain-timeout if "
-              f"this recurs.")
+        print(f"  WARNING: {still_running} request(s) still in flight after the drain "
+              f"timeout -- recorded as CENSORED (counted as SLO violations; tail "
+              f"percentiles use a lower bound). Increase --drain-timeout to observe them.")
 
-    per_type = {ct: evaluate_type(ct, results) for ct in ("chat", "moderate", "batch")}
+    with results_lock:
+        recorded = list(results)
+    recorded_ids = {r["client_id"] for r in recorded}
+    censored_floors = {
+        ct: [round(max(0.0, drain_end_elapsed - off), 3)
+             for i, off in enumerate(schedules[ct]) if f"{ct}-{i}" not in recorded_ids]
+        for ct in types
+    }
+    per_type = {ct: evaluate_type(ct, recorded, n_scheduled=len(schedules[ct]),
+                                   censored_floors=censored_floors[ct], timeout=args.timeout)
+                for ct in types}
+    aggregate = compute_aggregate_metrics(
+        recorded, generation_start, args.timeout,
+        n_scheduled_total=sum(len(s) for s in schedules.values()),
+        n_censored_total=sum(len(v) for v in censored_floors.values()),
+        horizon_elapsed=drain_end_elapsed, slots=args.slots, duration=args.duration)
 
     print(f"\n{'=' * 78}")
     print(f"  CONTINUOUS STRESS SUMMARY — {label}")
     print(f"{'=' * 78}")
-    for ct in ("chat", "moderate", "batch"):
+    for ct in types:
         s = per_type[ct]
+        tl = s["tail"]
         mean_str = f"{s['stats']['mean']:.3f}s" if s['stats']['mean'] is not None else "n/a"
+        p95_str = (f"{tl['p95']:.3f}s" + ("+" if tl["p95_is_lower_bound"] else "")) if tl["p95"] is not None else "n/a"
+        max_str = (f"{tl['max']:.2f}s" + ("+" if tl["max_is_lower_bound"] else "")) if tl["max"] is not None else "n/a"
         drift = " [DEGRADING OVER RUN]" if s["degrading_over_run"] else ""
-        print(f"  {ct:<9s} arrived={s['n_arrived']:4d}  completed={s['n_completed']:4d}  "
-              f"completion={s['completion_rate']}  {s['metric']} mean={mean_str:>8s}  "
-              f"violation_rate={s['slo_violation_rate']}{drift}")
+        print(f"  {ct:<9s} arrived={s['n_arrived']:4d} completed={s['n_completed']:4d} "
+              f"censored={s['n_censored']:3d}  {s['metric']} mean={mean_str:>8s} "
+              f"p95={p95_str:>9s} max={max_str:>8s}  "
+              f"violation_rate={s['slo_violation_rate']} ci95={s['slo_violation_ci95']}{drift}")
+    tct = aggregate["total_completion_time"]
+    tct_str = (f"{tct:.1f}s" + ("+" if aggregate["total_completion_time_is_lower_bound"] else "")) if tct is not None else "n/a"
+    print(f"\n  OVERALL   arrived={aggregate['total_arrived']:4d}  "
+          f"completed={aggregate['total_completed']:4d}  "
+          f"completion={aggregate['overall_completion_rate']}  total_completion_time={tct_str}")
+    print("  ('+' = lower bound: some requests were still unfinished at the drain deadline)")
 
     output = {
         "meta": {
@@ -758,11 +1055,19 @@ def main():
             "rates": rates,
             "rate_resolution": rate_details,
             "rate_frac": args.rate_frac,
+            "service_time_source": args.service_time_source,
+            "service_times": {ct: rates_and_mst[ct][1] for ct in rates_and_mst},
+            "offered_rho": args.offered_rho,
+            "mix": args.mix if args.offered_rho is not None else None,
+            "seed": seed,
+            "scheduled_arrivals": {ct: len(schedules[ct]) for ct in types},
+            "schedule_digest": digests,
             "still_in_flight_after_drain": still_running,
             "timestamp": datetime.now().isoformat(),
         },
         "per_type": per_type,
-        "raw": sorted(results, key=lambda r: r["wave_arrival_s"]),
+        "aggregate": aggregate,
+        "raw": sorted(recorded, key=lambda r: r["wave_arrival_s"]),
     }
     with open(output_path, "w") as f:
         json.dump(output, f, indent=2, default=str)

@@ -1,0 +1,45 @@
+
+edge-llm-server — Continuous Mixed-Workload Stress Test (Step 2)
+  Label          : sweep_rho1.0_scenario3_slots2_seed3
+  Scenario       : 3 (Smart Preemption (v1 reactive, non-interrupting))
+  Target         : localhost:8082 (proxy)
+  Slots (info)   : 2
+  Reservation    : reserved_slots=1  smart_preemption=True  (informational -- must match what proxy.py was actually started with)
+  Duration       : 600.0s per type, poisson arrivals
+  Started        : 2026-10-31T15:07:44
+
+  Service-time source: uncontended (slots=2)
+  Resolving arrival rates …
+  (offered-load mode: rho=1.0, mix=8:2:1)
+  chat      rate = 0.4343/s  (share 0.727, service 0.41s, expected n ~ 261)
+  moderate  rate = 0.1086/s  (share 0.182, service 4.57s, expected n ~ 65)
+  batch     rate = 0.0543/s  (share 0.091, service 24.42s, expected n ~ 33)
+  Combined utilization across active types = 1.000x (chat=0.089, moderate=0.248, batch=0.663) on 2 shared slot(s) -- sustainable.
+
+  Checking health …
+  Reachable — status: 'ok'
+
+  Arrival schedule: seed=3 (same seed + rates + duration => identical arrivals in every scenario)
+    chat      scheduled=  258  digest=aef1bcae9ac5
+    moderate  scheduled=   66  digest=dc5a1051fcca
+    batch     scheduled=   30  digest=9cfb1f6e51fc
+
+  Generating arrivals for 600.0s …
+  [moderate] generator done: fired 66 scheduled arrivals
+  [batch] generator done: fired 30 scheduled arrivals
+  [chat] generator done: fired 258 scheduled arrivals
+
+  Arrivals complete. Draining in-flight requests (up to 180.0s) …
+
+==============================================================================
+  CONTINUOUS STRESS SUMMARY — sweep_rho1.0_scenario3_slots2_seed3
+==============================================================================
+  chat      arrived= 258 completed= 258 censored=  0  ttft mean=  6.808s p95=  22.260s max=  29.93s  violation_rate=0.9574 ci95=[0.9253, 0.976] [DEGRADING OVER RUN]
+  moderate  arrived=  66 completed=  66 censored=  0  ttft mean= 12.391s p95=  26.190s max=  30.22s  violation_rate=0.9545 ci95=[0.8747, 0.9844]
+  batch     arrived=  30 completed=  28 censored=  0  total_time mean= 98.527s p95=150.000s+ max= 151.39s  violation_rate=0.8667 ci95=[0.7032, 0.9469]
+
+  OVERALL   arrived= 354  completed= 352  completion=0.9944  total_completion_time=673.3s
+  ('+' = lower bound: some requests were still unfinished at the drain deadline)
+
+  Results saved -> results/load_sweep/results_sweep_rho1.0_scenario3_slots2_seed3.json
+

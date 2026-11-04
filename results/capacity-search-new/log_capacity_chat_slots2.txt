@@ -1,0 +1,68 @@
+
+edge-llm-server — Isolated Capacity Search (capacity_chat_slots2)
+  Client type    : chat  (TTFT mean < 0.5s)
+  Host:port      : localhost:8081  (direct to server)
+  Search mode    : adaptive
+  Start / Max n  : 1 / 64
+  Repeats/level  : 3  (+ 1 warm-up trial(s) discarded per level)
+  Slots (info)   : 2
+  Started        : 2026-10-30T01:07:32
+
+  Checking health …
+  Reachable — status: 'ok'
+
+  Concurrency 1 (chat) — 3 repeated trials  [adaptive]
+    warm-up 1/1 (discarded) …
+    trial 1/3: n_ok=  1/  1  mean=  0.045s  [ok]
+    trial 2/3: n_ok=  1/  1  mean=  0.044s  [ok]
+    trial 3/3: n_ok=  1/  1  mean=  0.081s  [ok]
+    -> pooled: n_ok=3/3  completion=1.0  mean=0.057s  [PASS]
+
+  Concurrency 2 (chat) — 3 repeated trials  [adaptive]
+    warm-up 1/1 (discarded) …
+    trial 1/3: n_ok=  2/  2  mean=  0.114s  [ok]
+    trial 2/3: n_ok=  2/  2  mean=  0.149s  [ok]
+    trial 3/3: n_ok=  2/  2  mean=  0.079s  [ok]
+    -> pooled: n_ok=6/6  completion=1.0  mean=0.114s  [PASS]
+
+  Concurrency 4 (chat) — 3 repeated trials  [adaptive]
+    warm-up 1/1 (discarded) …
+    trial 1/3: n_ok=  4/  4  mean=  0.259s  [ok]
+    trial 2/3: n_ok=  4/  4  mean=  0.211s  [ok]
+    trial 3/3: n_ok=  4/  4  mean=  0.254s  [ok]
+    -> pooled: n_ok=12/12  completion=1.0  mean=0.241s  [PASS]
+
+  Concurrency 8 (chat) — 3 repeated trials  [adaptive]
+    warm-up 1/1 (discarded) …
+    trial 1/3: n_ok=  8/  8  mean=  0.619s  [FAIL]
+    trial 2/3: n_ok=  8/  8  mean=  0.553s  [FAIL]
+    trial 3/3: n_ok=  8/  8  mean=  0.595s  [FAIL]
+    -> pooled: n_ok=24/24  completion=1.0  mean=0.589s  [FAIL]
+
+  Concurrency 6 (chat) — 3 repeated trials  [adaptive]
+    warm-up 1/1 (discarded) …
+    trial 1/3: n_ok=  6/  6  mean=  0.391s  [ok]
+    trial 2/3: n_ok=  6/  6  mean=  0.395s  [ok]
+    trial 3/3: n_ok=  6/  6  mean=  0.404s  [ok]
+    -> pooled: n_ok=18/18  completion=1.0  mean=0.397s  [PASS]
+
+  Concurrency 7 (chat) — 3 repeated trials  [adaptive]
+    warm-up 1/1 (discarded) …
+    trial 1/3: n_ok=  7/  7  mean=  0.487s  [ok]
+    trial 2/3: n_ok=  7/  7  mean=  0.464s  [ok]
+    trial 3/3: n_ok=  7/  7  mean=  0.478s  [ok]
+    -> pooled: n_ok=21/21  completion=1.0  mean=0.476s  [PASS]
+
+==========================================================================
+  CAPACITY SEARCH SUMMARY — capacity_chat_slots2
+==========================================================================
+  Max concurrency within SLO: 7
+    concurrency=   1  mean=  0.057s  completion=1.0  [PASS]
+    concurrency=   2  mean=  0.114s  completion=1.0  [PASS]
+    concurrency=   4  mean=  0.241s  completion=1.0  [PASS]
+    concurrency=   6  mean=  0.397s  completion=1.0  [PASS]
+    concurrency=   7  mean=  0.476s  completion=1.0  [PASS]
+    concurrency=   8  mean=  0.589s  completion=1.0  [FAIL]
+
+  Results saved → results/capacity-search-new/results_capacity_chat_slots2.json
+

@@ -1,0 +1,36 @@
+
+edge-llm-server — Continuous Mixed-Workload Stress Test (Step 2)
+  Label          : sweep_L0.5_scenario3_slots2_ts15
+  Scenario       : 3 (Smart Preemption (v1 reactive, non-interrupting))
+  Target         : localhost:8082 (proxy)
+  Slots (info)   : 2
+  Reservation    : reserved_slots=1  smart_preemption=True  (informational -- must match what proxy.py was actually started with)
+  Duration       : 868.0s per type, poisson arrivals
+  Started        : 2026-10-29T17:52:34
+
+  Resolving arrival rates …
+  (target-samples mode: aiming for 15 samples/type, combined-budget=0.5)
+  chat      rate = 0.0173/s (target-samples: aiming for 15 over 868s (naive_rate=0.0173/s), scaled 1.000x for combined budget 0.5 -> rate=0.0173/s, expected_n~=15.0)
+  moderate  rate = 0.0173/s (target-samples: aiming for 15 over 868s (naive_rate=0.0173/s), scaled 1.000x for combined budget 0.5 -> rate=0.0173/s, expected_n~=15.0)
+  batch     rate = 0.0173/s (target-samples: aiming for 15 over 868s (naive_rate=0.0173/s), scaled 1.000x for combined budget 0.5 -> rate=0.0173/s, expected_n~=15.0)
+  Combined utilization across active types = 0.493x (chat=0.006, moderate=0.063, batch=0.424) on 2 shared slot(s) -- sustainable.
+
+  Checking health …
+  Reachable — status: 'ok'
+
+  Generating arrivals for 868.0s …
+  [chat] generator done: fired 13 arrivals over 868.0s (target rate 0.017/s)
+  [moderate] generator done: fired 16 arrivals over 868.0s (target rate 0.017/s)
+  [batch] generator done: fired 14 arrivals over 868.0s (target rate 0.017/s)
+
+  Arrivals complete. Draining in-flight requests (up to 180.0s) …
+
+==============================================================================
+  CONTINUOUS STRESS SUMMARY — sweep_L0.5_scenario3_slots2_ts15
+==============================================================================
+  chat      arrived=  13  completed=  13  completion=1.0  ttft mean=  0.646s  violation_rate=0.2308 [DEGRADING OVER RUN]
+  moderate  arrived=  16  completed=  16  completion=1.0  ttft mean=  0.836s  violation_rate=0.0625
+  batch     arrived=  14  completed=  14  completion=1.0  total_time mean= 23.998s  violation_rate=0.0
+
+  Results saved -> results/sweep/L0.5/results_sweep_L0.5_scenario3_slots2_ts15.json
+

@@ -1,0 +1,36 @@
+
+edge-llm-server — Continuous Mixed-Workload Stress Test (Step 2)
+  Label          : sweep_L0.3_scenario2_slots8_ts15
+  Scenario       : 2 (Fixed Reservation)
+  Target         : localhost:8082 (proxy)
+  Slots (info)   : 8
+  Reservation    : reserved_slots=1  smart_preemption=False  (informational -- must match what proxy.py was actually started with)
+  Duration       : 490.0s per type, poisson arrivals
+  Started        : 2026-10-29T21:47:11
+
+  Resolving arrival rates …
+  (target-samples mode: aiming for 15 samples/type, combined-budget=0.3)
+  chat      rate = 0.0306/s (target-samples: aiming for 15 over 490s (naive_rate=0.0306/s), scaled 1.000x for combined budget 0.3 -> rate=0.0306/s, expected_n~=15.0)
+  moderate  rate = 0.0306/s (target-samples: aiming for 15 over 490s (naive_rate=0.0306/s), scaled 1.000x for combined budget 0.3 -> rate=0.0306/s, expected_n~=15.0)
+  batch     rate = 0.0306/s (target-samples: aiming for 15 over 490s (naive_rate=0.0306/s), scaled 1.000x for combined budget 0.3 -> rate=0.0306/s, expected_n~=15.0)
+  Combined utilization across active types = 0.298x (chat=0.003, moderate=0.071, batch=0.224) on 8 shared slot(s) -- sustainable.
+
+  Checking health …
+  Reachable — status: 'ok'
+
+  Generating arrivals for 490.0s …
+  [chat] generator done: fired 6 arrivals over 490.0s (target rate 0.031/s)
+  [moderate] generator done: fired 17 arrivals over 490.0s (target rate 0.031/s)
+  [batch] generator done: fired 14 arrivals over 490.0s (target rate 0.031/s)
+
+  Arrivals complete. Draining in-flight requests (up to 180.0s) …
+
+==============================================================================
+  CONTINUOUS STRESS SUMMARY — sweep_L0.3_scenario2_slots8_ts15
+==============================================================================
+  chat      arrived=   6  completed=   6  completion=1.0  ttft mean=  0.538s  violation_rate=0.5
+  moderate  arrived=  17  completed=  16  completion=0.9412  ttft mean=  0.328s  violation_rate=0.0588
+  batch     arrived=  14  completed=  14  completion=1.0  total_time mean= 29.270s  violation_rate=0.0
+
+  Results saved -> results/sweep/L0.3/results_sweep_L0.3_scenario2_slots8_ts15.json
+

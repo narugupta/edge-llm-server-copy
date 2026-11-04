@@ -1,0 +1,52 @@
+
+edge-llm-server — Isolated Capacity Search (capacity_chat_slots8)
+  Client type    : chat  (TTFT mean < 0.5s)
+  Host:port      : localhost:8081  (direct to server)
+  Search mode    : adaptive
+  Start / Max n  : 1 / 64
+  Repeats/level  : 3  (+ 1 warm-up trial(s) discarded per level)
+  Slots (info)   : 8
+  Started        : 2026-10-30T02:17:51
+
+  Checking health …
+  Reachable — status: 'ok'
+
+  Concurrency 1 (chat) — 3 repeated trials  [adaptive]
+    warm-up 1/1 (discarded) …
+    trial 1/3: n_ok=  1/  1  mean=  0.044s  [ok]
+    trial 2/3: n_ok=  1/  1  mean=  0.044s  [ok]
+    trial 3/3: n_ok=  1/  1  mean=  0.044s  [ok]
+    -> pooled: n_ok=3/3  completion=1.0  mean=0.044s  [PASS]
+
+  Concurrency 2 (chat) — 3 repeated trials  [adaptive]
+    warm-up 1/1 (discarded) …
+    trial 1/3: n_ok=  2/  2  mean=  0.057s  [ok]
+    trial 2/3: n_ok=  2/  2  mean=  0.064s  [ok]
+    trial 3/3: n_ok=  2/  2  mean=  0.071s  [ok]
+    -> pooled: n_ok=6/6  completion=1.0  mean=0.064s  [PASS]
+
+  Concurrency 4 (chat) — 3 repeated trials  [adaptive]
+    warm-up 1/1 (discarded) …
+    trial 1/3: n_ok=  4/  4  mean=  0.687s  [FAIL]
+    trial 2/3: n_ok=  4/  4  mean=  0.725s  [FAIL]
+    trial 3/3: n_ok=  4/  4  mean=  0.420s  [ok]
+    -> pooled: n_ok=12/12  completion=1.0  mean=0.610s  [FAIL]
+
+  Concurrency 3 (chat) — 3 repeated trials  [adaptive]
+    warm-up 1/1 (discarded) …
+    trial 1/3: n_ok=  3/  3  mean=  0.264s  [ok]
+    trial 2/3: n_ok=  3/  3  mean=  0.329s  [ok]
+    trial 3/3: n_ok=  3/  3  mean=  0.339s  [ok]
+    -> pooled: n_ok=9/9  completion=1.0  mean=0.311s  [PASS]
+
+==========================================================================
+  CAPACITY SEARCH SUMMARY — capacity_chat_slots8
+==========================================================================
+  Max concurrency within SLO: 3
+    concurrency=   1  mean=  0.044s  completion=1.0  [PASS]
+    concurrency=   2  mean=  0.064s  completion=1.0  [PASS]
+    concurrency=   3  mean=  0.311s  completion=1.0  [PASS]
+    concurrency=   4  mean=  0.610s  completion=1.0  [FAIL]
+
+  Results saved → results/capacity-search-new/results_capacity_chat_slots8.json
+
