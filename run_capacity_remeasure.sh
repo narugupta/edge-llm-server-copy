@@ -37,7 +37,7 @@ for slots in "${SLOT_COUNTS[@]}"; do
     echo "  [server] --parallel $slots"
     if [[ "$DRY_RUN" != 1 ]]; then
         "$LLAMA_SERVER_BIN" -m "$MODEL" --port 8081 --parallel "$slots" \
-            --ctx-size 2048 --kv-unified ${SERVER_EXTRA:-} > "server_log_capacity_slots${slots}.txt" 2>&1 &
+            --ctx-size 2048 --kv-unified ${SERVER_EXTRA:-} > "$OUTDIR/server_log_capacity_slots${slots}.txt" 2>&1 &
         server_pid=$!
         sleep 8
         if ! kill -0 "$server_pid" 2>/dev/null; then
