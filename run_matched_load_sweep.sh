@@ -62,7 +62,7 @@ start_server() {
     echo "  [server] llama-server --parallel $slots"
     [[ "$DRY_RUN" == 1 ]] && return 0
     "$LLAMA_SERVER_BIN" -m "$MODEL" --port "$SERVER_PORT" \
-        --parallel "$slots" --ctx-size 2048 --kv-unified \
+        --parallel "$slots" --ctx-size 2048 --kv-unified ${SERVER_EXTRA:-} \
         > "server_log_sweep_slots${slots}.txt" 2>&1 &
     server_pid=$!
     sleep "$WARMUP_SECONDS"
