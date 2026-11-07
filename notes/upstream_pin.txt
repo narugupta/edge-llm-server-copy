@@ -1,0 +1,5 @@
+llama.cpp source in this repo = upstream ggml-org/llama.cpp commit 80d2c0c2c (build 12188, fetched 2026-11-07)
+Previous base: snapshot of upstream ~2026-05-23 (b22ff4b7b, plus UI-code drift), binary kept at ~/oldbase-bin (version 19 (1241d2f))
+Kept trimmed: ggml backends other than CPU/Vulkan/OpenCL, tools other than server/llama-bench/batched-bench/quantize/mtmd/ui/connect/tuning, tests, most scripts
+Refresh with ~/sync_llamacpp.sh <commit> --apply, then drop removed tools from tools/CMakeLists.txt
+Build: cmake -B build-new -DCMAKE_BUILD_TYPE=Release -DGGML_NATIVE=ON -DLLAMA_BUILD_UI=OFF -DLLAMA_BUILD_EXAMPLES=OFF -DLLAMA_BUILD_APP=OFF -DLLAMA_BUILD_TESTS=OFF
